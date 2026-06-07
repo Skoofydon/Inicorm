@@ -2,140 +2,232 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Brawl Tracker PRO | S+ Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Lilita+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>Brawl Stars Tracker</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; min-height: 100vh; padding: 0 16px 40px 16px; transition: background 0.3s ease, color 0.2s; position: relative; overflow-x: hidden; }
-        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; transition: background 0.5s; }
-        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .particle { position: absolute; background: rgba(255,215,0,0.3); border-radius: 50%; animation: floatParticle linear infinite; }
-        @keyframes floatParticle { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
-        body.dark { color: #EDF2F7; } body.dark .bg-animation { background: radial-gradient(circle at 20% 30%, #0a0f1a, #03060c); }
-        body.light { color: #0B1120; } body.light .bg-animation { background: linear-gradient(145deg, #e0e7ff, #f8fafc); }
-        body.neon { color: #fff; } body.neon .bg-animation { background: radial-gradient(circle at 30% 10%, #0a0f2a, #00000c); box-shadow: inset 0 0 50px rgba(0,255,255,0.2); } body.neon .card { border-color: #0ff; box-shadow: 0 0 15px rgba(0,255,255,0.3); }
-        .container { max-width: 1300px; margin: 0 auto; position: relative; z-index: 2; }
-        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 20px 0; margin-bottom: 24px; animation: slideDown 0.6s ease; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        .logo h1 { font-family: 'Lilita One', cursive; font-size: 28px; background: linear-gradient(135deg, #FFD966, #FFB347); -webkit-background-clip: text; background-clip: text; color: transparent; animation: pulseGlow 2s infinite; }
-        @keyframes pulseGlow { 0% { text-shadow: 0 0 0px rgba(255,215,0,0); } 50% { text-shadow: 0 0 8px rgba(255,215,0,0.5); } 100% { text-shadow: 0 0 0px rgba(255,215,0,0); } }
-        .coin-panel { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(12px); padding: 8px 20px; border-radius: 60px; display: flex; align-items: center; gap: 12px; font-weight: bold; }
-        .coins-count { font-size: 26px; color: #FFD966; }
-        .daily-btn, .shop-btn { background: #2D3A4E; border: none; color: white; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; }
-        .card { backdrop-filter: blur(16px); border-radius: 32px; padding: 20px; margin-bottom: 24px; border: 1px solid rgba(255,215,0,0.4); transition: transform 0.2s, box-shadow 0.2s; animation: fadeInUp 0.5s ease backwards; }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3); }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        body.dark .card { background: rgba(20, 30, 45, 0.8); } body.light .card { background: rgba(255, 255, 255, 0.9); border-color: #FFD966; } body.neon .card { background: rgba(0, 10, 20, 0.7); border-color: #0ff; }
-        .search-area { display: flex; gap: 12px; flex-wrap: wrap; }
-        .search-area input { flex: 2; background: rgba(15, 23, 42, 0.8); border: 1px solid #FFD966; padding: 14px 18px; border-radius: 60px; color: white; font-size: 16px; }
-        .search-area input:focus { outline: none; border-color: #FFA500; box-shadow: 0 0 12px rgba(255,215,0,0.4); }
-        .search-area button { background: linear-gradient(135deg, #FFD966, #FFB347); border: none; padding: 0 28px; border-radius: 60px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
-        .search-area button:active { transform: scale(0.96); }
-        .stat-item, .brawler-card, .battle-row, .fav-tag { transition: all 0.2s; }
-        .stat-item:hover, .brawler-card:hover, .fav-tag:hover { transform: scale(1.02); background: rgba(255,215,0,0.2); }
-        .player-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 12px; margin-top: 16px; }
-        .stat-item { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 24px; text-align: center; }
-        .brawler-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-top: 16px; }
-        .brawler-card { background: rgba(0,0,0,0.4); border-radius: 24px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .battle-row { background: rgba(0,0,0,0.4); margin-bottom: 8px; padding: 12px; border-radius: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; }
-        .favorite-tags { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
-        .fav-tag { background: #2D3A4E; padding: 6px 14px; border-radius: 40px; cursor: pointer; }
-        .settings-fab { position: fixed; bottom: 24px; right: 24px; background: #2D3A4E; width: 56px; height: 56px; border-radius: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .settings-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(20px); border-radius: 40px; padding: 24px; width: 280px; z-index: 1001; border: 1px solid #FFD966; text-align: center; }
-        .settings-modal button { background: #2c5f6e; border: none; padding: 10px 16px; margin: 8px; border-radius: 60px; cursor: pointer; color: white; font-weight: bold; }
-        @media (max-width: 680px) { .player-stats { grid-template-columns: 1fr 1fr; } .brawler-list { grid-template-columns: 1fr; } }
-        canvas { max-height: 250px; width: 100%; margin-top: 20px; }
-        .footer-small { text-align: center; margin-top: 30px; opacity: 0.7; font-size: 12px; }
-    </style>
-</head>
-<body class="dark">
-<div class="bg-animation"></div>
-<div class="particles" id="particles"></div>
-<div class="container">
-    <div class="header">
-        <div class="logo"><h1>⚡ BRAWL TRACKER PRO+</h1><span style="font-size:12px;">BS Tracker + Tracker+</span></div>
-        <div class="coin-panel">
-            <i class="fas fa-coins"></i> <span class="coins-count" id="coinsAmount">0</span>
-            <button id="dailyBonusBtn" class="daily-btn">🎁 Бонус</button>
-            <button id="openShopBtn" class="shop-btn">🏪 Магазин</button>
-        </div>
-    </div>
-    <div class="card">
-        <div class="search-area">
-            <input type="text" id="playerTag" placeholder="#2PPQVUQ8J или любой тег" value="#2PPQVUQ8J">
-            <button id="searchBtn"><i class="fas fa-search"></i> Найти</button>
-        </div>
-        <div class="favorite-tags" id="favoriteTagsList"></div>
-        <div id="playerInfo"></div>
-        <div id="battleLogSection"></div>
-        <div id="brawlersSection"></div>
-        <div id="mapAdviceSection"></div>
-        <div id="chartSection"><canvas id="progressChart"></canvas></div>
-    </div>
-    <div id="shopModal" style="display:none; position:fixed; top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:1000;justify-content:center;align-items:center;">
-        <div style="background:#1E293B; border-radius:40px; padding:28px; max-width:400px; width:90%;">
-            <h3>🏪 МАГАЗИН <span id="closeShop" style="float:right;cursor:pointer;">✖️</span></h3>
-            <div style="margin:20px 0;">
-                <div style="background:#FFD966; border-radius:28px; padding:16px; color:#0B0F17;"><i class="fas fa-crown"></i> <strong>BS Tracker+</strong> — 14 дней<br>✔ Расширенный боевой лог<br>✔ Детальная статистика<br>✔ Продвинутые советы</div>
-                <button id="buyPlusBtn" style="background:#FFB347; width:100%; padding:14px; border-radius:60px; margin-top:20px;">💰 1500 COINS</button>
-                <div id="plusStatus" style="margin-top:12px; text-align:center;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="settings-fab" id="settingsFab"><i class="fas fa-sliders-h"></i></div>
-    <div class="settings-modal" id="settingsModal">
-        <h4>🎮 Настройки</h4>
-        <button id="themeDark">🌙 Тёмная</button>
-        <button id="themeLight">☀️ Светлая</button>
-        <button id="themeNeon">💚 Неоновая</button>
-        <button id="toggleSoundBtn">🔊 Звук: Вкл</button>
-        <button id="particlesBtn">✨ Частицы: Вкл</button>
-    </div>
-</div>
-<script>
-    let soundEnabled = true;
-    function playClickSound() { if (!soundEnabled) return; try { let AudioCtx = window.AudioContext || window.webkitAudioContext; let ctx = new AudioCtx(); let osc = ctx.createOscillator(); let gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 880; gain.gain.value = 0.1; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1); osc.stop(ctx.currentTime + 0.1); } catch(e) { } }
-    function playWinSound() { if (!soundEnabled) return; try { let AudioCtx = window.AudioContext || window.webkitAudioContext; let ctx = new AudioCtx(); let osc = ctx.createOscillator(); let gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = 1400; gain.gain.value = 0.15; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.2); osc.stop(ctx.currentTime + 0.2); } catch(e) { } }
-    let particlesEnabled = true;
-    function initParticles() { const container = document.getElementById('particles'); container.innerHTML = ''; if (!particlesEnabled) return; for (let i = 0; i < 40; i++) { let p = document.createElement('div'); p.classList.add('particle'); let size = Math.random() * 6 + 2; p.style.width = size + 'px'; p.style.height = size + 'px'; p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = Math.random() * 8 + 5 + 's'; p.style.animationDelay = Math.random() * 10 + 's'; container.appendChild(p); } }
-    let coins = 0, dailyStreak = 0, lastDailyDate = "", plusExpiry = 0, plusActive = false;
-    const DAILY_REWARDS = [100,150,250,250,500,300,1200];
-    function loadUserData() { let data = localStorage.getItem("bs_tracker_user"); if(data) { let obj = JSON.parse(data); coins = obj.coins||0; dailyStreak = obj.dailyStreak||0; lastDailyDate = obj.lastDailyDate||""; plusExpiry = obj.plusExpiry||0; } else { coins = 300; } updateCoinsUI(); checkPlusActive(); }
-    function saveUserData() { localStorage.setItem("bs_tracker_user", JSON.stringify({coins, dailyStreak, lastDailyDate, plusExpiry})); }
-    function updateCoinsUI() { document.getElementById("coinsAmount").innerText = coins; }
-    function checkPlusActive() { let now = Date.now(); plusActive = (plusExpiry > now); if(!plusActive && plusExpiry>0) plusExpiry=0; updatePlusUI(); }
-    function updatePlusUI() { document.getElementById("plusStatus").innerHTML = plusActive ? `<span style="color:#FFD966;">✅ Активен ещё ${Math.ceil((plusExpiry-Date.now())/86400000)} дн.</span>` : `❌ Не активен`; }
-    function giveDailyBonus() { let today = new Date().toDateString(); if(lastDailyDate === today) { alert("Бонус уже получен!"); return; } let streak = (lastDailyDate && new Date(new Date().setDate(new Date().getDate()-1)).toDateString() === lastDailyDate) ? Math.min(dailyStreak+1,6) : 0; let reward = DAILY_REWARDS[streak]; coins += reward; dailyStreak = streak; lastDailyDate = today; saveUserData(); updateCoinsUI(); playWinSound(); alert(`🎁 +${reward} COINS! День ${streak+1}/7`); }
-    function buyTrackerPlus() { if(plusActive) { alert("Уже активен"); return; } if(coins >= 1500) { coins -= 1500; plusExpiry = Date.now() + 14*86400000; saveUserData(); updateCoinsUI(); checkPlusActive(); alert("BS Tracker+ активирован на 14 дней!"); renderCurrentPlayer(); playWinSound(); } else alert(`Не хватает монет (нужно 1500)`); }
-    let currentPlayerData = null, currentBattleLog = [], currentBrawlers = [];
-    const API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImE1MzEyYTE1LTIyMmUtNGJhZi1hYjc1LTE3MTRjY2JlZmE4MSIsImlhdCI6MTc4MDgzNDU0NSwic3ViIjoiZGV2ZWxvcGVyLzEzMDNlYTE1LWU1ZDItYmVh MS1hYmMwLTQ4YTk5MGIxZDIzYyIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiOTEuMTg4LjI1NC44NSJdLCJ0eXBlIjoiY2xpZW50In1dfQ.7UIqQGuWWosMtv-057EkHhuRvu81zYKzj4TE-6ww6bsbzPBdcjBOjlh6LN27mFDtoo6W5iN7H9Y6oPYbN_fkgQ";
-    const PROXY = "https://brawl-proxy.herokuapp.com/";
-    async function fetchPlayer(tag) {
-        let clean = tag.replace(/#/g,'').toUpperCase();
-        let url = `https://api.brawlstars.com/v1/players/%23${clean}`;
-        let proxiedUrl = PROXY + url;
-        let res = await fetch(proxiedUrl, { headers: { "Authorization": `Bearer ${API_KEY}` } });
-        if(res.status === 403) throw new Error("❌ КЛЮЧ НЕДЕЙСТВИТЕЛЕН. Удали старый ключ и создай новый с IP: 91.188.254.85");
-        if(res.status === 404) throw new Error("❌ Игрок не найден. Проверь тег (пример: #2PPQVUQ8J)");
-        if(!res.ok) throw new Error(`Ошибка ${res.status}: ${res.statusText}`);
-        let player = await res.json();
-        let battleRes = await fetch(PROXY + `https://api.brawlstars.com/v1/players/%23${clean}/battlelog`, { headers: { "Authorization": `Bearer ${API_KEY}` } });
-        let battleData = battleRes.ok ? await battleRes.json() : { items: [] };
-        return { player, battleLog: battleData.items || [] };
-    }
-    async function searchPlayer() { let tag = document.getElementById("playerTag").value.trim(); if(!tag.startsWith("#")) tag = "#"+tag; document.getElementById("playerInfo").innerHTML = `<div style="padding:20px;">⏳ Загрузка...</div>`; try { let { player, battleLog } = await fetchPlayer(tag); currentPlayerData = player; currentBattleLog = battleLog.slice(0, plusActive ? 20 : 10); currentBrawlers = player.brawlers || []; renderPlayerUI(); saveFavoriteTag(tag); playClickSound(); } catch(e) { document.getElementById("playerInfo").innerHTML = `<div style="background:#aa2e2e; padding:20px; border-radius:28px;">❌ ${e.message}</div>`; } }
-    function renderPlayerUI() { if(!currentPlayerData) return; let p = currentPlayerData; let html = `<div><h2>${p.name} <span style="color:#FFD966;">#${p.tag.replace('#','')}</span></h2><p>🏆 ${p.trophies} трофеев | 🏅 Уровень ${p.expLevel}</p><div class="player-stats"><div class="stat-item">🎯 3vs3 побед: ${p["3vs3Victories"]||0}</div><div class="stat-item">⭐ Соло побед: ${p.soloVictories||0}</div><div class="stat-item">👥 Дуо побед: ${p.duoVictories||0}</div><div class="stat-item">💀 Всего боёв: ${p.battleCount||0}</div></div></div>`; document.getElementById("playerInfo").innerHTML = html; let logHtml = `<div class="card-title">📜 БОЕВОЙ ЛОГ ${plusActive ? "(расширенный)" : "(10 последних)"}</div>`; if(currentBattleLog.length === 0) logHtml += "<div>Нет боёв в логе</div>"; currentBattleLog.forEach(b => { let win = b.battle.result === "victory"; logHtml += `<div class="battle-row"><span><strong>${b.battle.mode || "?"}</strong> ${b.battle.map || ""}</span><span>${b.battle.brawler?.name || "?"}</span><span style="color:${win ? '#7EFF7E' : '#FF9090'}">${win ? "🏆 ПОБЕДА" : "💀 ПОРАЖЕНИЕ"}</span><span>${b.battle.trophyChange ? (b.battle.trophyChange>0 ? `+${b.battle.trophyChange}` : b.battle.trophyChange) : "—"}</span></div>`; }); document.getElementById("battleLogSection").innerHTML = logHtml; let brawHtml = `<div class="card-title">👥 БРАВЛЕРЫ (${currentBrawlers.length})</div><div class="brawler-list">`; currentBrawlers.slice(0, plusActive ? 100 : 30).forEach(b => { brawHtml += `<div class="brawler-card"><div><strong>${b.name}</strong><br>🏆 ${b.trophies}</div><div>⚡ Уровень ${b.power || 1}</div></div>`; }); brawHtml += `</div>`; document.getElementById("brawlersSection").innerHTML = brawHtml; let advice = `<div class="card-title">🗺️ РЕКОМЕНДАЦИИ НА КАРТЫ</div><div>🎯 Актуальные карты: "Заброшенный город", "Золотая бухта". Лучшие пики: Спайк, Леон, Пайпер.<br>${plusActive ? '✨ Tracker+ активен: дополнительный анализ винрейта по картам доступен.' : '🔒 Купи BS Tracker+ для детальных советов по картам и контр-пикам.'}</div>`; document.getElementById("mapAdviceSection").innerHTML = advice; let ctx = document.getElementById('progressChart').getContext('2d'); if(window.myChart) window.myChart.destroy(); let mockData = [p.trophies-200, p.trophies-150, p.trophies-80, p.trophies-40, p.trophies]; window.myChart = new Chart(ctx, { type: 'line', data: { labels: ['4 нед.', '3 нед.', '2 нед.', '1 нед.', 'сегодня'], datasets: [{ label: 'Трофеи', data: mockData, borderColor: '#FFD966', tension: 0.3, fill: true }] }, options: { responsive: true } }); }
-    function renderCurrentPlayer() { if(currentPlayerData) renderPlayerUI(); }
-    let favorites = [];
-    function loadFavorites() { let fav = localStorage.getItem("bs_fav_tags"); favorites = fav ? JSON.parse(fav) : ["#2PPQVUQ8J"]; renderFavorites(); }
-    function saveFavoriteTag(tag) { if(!favorites.includes(tag)) { favorites.unshift(tag); if(favorites.length>6) favorites.pop(); localStorage.setItem("bs_fav_tags",JSON.stringify(favorites)); renderFavorites(); } }
-    function renderFavorites() { let html = ""; favorites.forEach(t=>{ html+=`<div class="fav-tag" data-tag="${t}">${t}</div>`; }); document.getElementById("favoriteTagsList").innerHTML = html; document.querySelectorAll(".fav-tag").forEach(el=>{ el.onclick = ()=>{ document.getElementById("playerTag").value = el.dataset.tag; searchPlayer(); }; }); }
-    function initSettings() { document.getElementById("themeDark").onclick = ()=>{ document.body.classList.remove("light","neon"); document.body.classList.add("dark"); localStorage.setItem("bs_theme","dark"); }; document.getElementById("themeLight").onclick = ()=>{ document.body.classList.remove("dark","neon"); document.body.classList.add("light"); localStorage.setItem("bs_theme","light"); }; document.getElementById("themeNeon").onclick = ()=>{ document.body.classList.remove("dark","light"); document.body.classList.add("neon"); localStorage.setItem("bs_theme","neon"); }; let savedTheme = localStorage.getItem("bs_theme"); if(savedTheme === "light") document.body.classList.add("light"); else if(savedTheme === "neon") document.body.classList.add("neon"); else document.body.classList.add("dark"); let soundBtn = document.getElementById("toggleSoundBtn"); soundBtn.onclick = ()=>{ soundEnabled = !soundEnabled; soundBtn.innerText = soundEnabled ? "🔊 Звук: Вкл" : "🔇 Звук: Выкл"; localStorage.setItem("bs_sound", soundEnabled); }; let savedSound = localStorage.getItem("bs_sound"); if(savedSound !== null) soundEnabled = savedSound === "true"; soundBtn.innerText = soundEnabled ? "🔊 Звук: Вкл" : "🔇 Звук: Выкл"; let particlesBtn = document.getElementById("particlesBtn"); particlesBtn.onclick = ()=>{ particlesEnabled = !particlesEnabled; initParticles(); localStorage.setItem("bs_particles", particlesEnabled); }; let savedParticles = localStorage.getItem("bs_particles"); if(savedParticles !== null) particlesEnabled = savedParticles === "true"; initParticles(); }
-    function init() { loadUserData(); loadFavorites(); initSettings(); document.getElementById("dailyBonusBtn").onclick = giveDailyBonus; document.getElementById("openShopBtn").onclick = ()=>document.getElementById("shopModal").style.display="flex"; document.getElementById("closeShop").onclick = ()=>document.getElementById("shopModal").style.display="none"; document.getElementById("buyPlusBtn").onclick = ()=>{ buyTrackerPlus(); document.getElementById("shopModal").style.display="none"; }; document.getElementById("searchBtn").onclick = searchPlayer; const settingsFab = document.getElementById("settingsFab"); const settingsModal = document.getElementById("settingsModal"); settingsFab.onclick = (e) => { e.stopPropagation(); settingsModal.style.display = (settingsModal.style.display === "flex") ? "none" : "flex"; }; window.onclick = (e) => { if(e.target === settingsModal) settingsModal.style.display = "none"; }; searchPlayer(); setInterval(()=>{ checkPlusActive(); if(currentPlayerData) renderPlayerUI(); }, 60000); }
-    init();
-</script>
-</body>
-</html>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Анимации */
+        @keyframes coinAnimation {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-50px) rotate(180deg); opacity: 0.8; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 1; }
+        }
+
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 107, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+        }
+
+        @keyframes shine {
+            0% { background-position: -500px 0; }
+            100% { background-position: 500px 0; }
+        }
+
+        .coin-animation {
+            animation: coinAnimation 0.5s ease-out;
+            display: inline-block;
+        }
+
+        .pulse-button {
+            animation: buttonPulse 2s infinite;
+        }
+
+        .shine-button {
+            background: linear-gradient(90deg, #ff6b35, #ff8c52, #ff6b35);
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ff6b35;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b35, transparent, #ff6b35);
+            animation: shine 2s linear infinite;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .coins {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #buy-premium {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+
+        .tab-button:hover::after {
+            left: 100%;
+        }
+
+        .tab-button.active {
+            background: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #progress-chart, #fighter-recommendations, #battle-log {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .input-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        input, button {
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        input:focus, button:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .reward-day {
+            padding: 15px;
+            margin: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .reward-claimed {
+            background: #4CAF50 !important;
+            border-color: #2E7D32;
+        }
+
+        .reward-day:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 107, 53, 0.2);
+        }
+
+        /* Настройки тем */
+        .theme-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(26, 26, 46, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
+        }
+
+        .theme-option {
+            padding: 8px 15px;
+            margin: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .theme
