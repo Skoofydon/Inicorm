@@ -112,15 +112,17 @@
     function buyTrackerPlus() { if(plusActive) { alert("Уже активен"); return; } if(coins >= 1500) { coins -= 1500; plusExpiry = Date.now() + 14*86400000; saveUserData(); updateCoinsUI(); checkPlusActive(); alert("BS Tracker+ активирован на 14 дней!"); renderCurrentPlayer(); playWinSound(); } else alert(`Не хватает монет (нужно 1500)`); }
     let currentPlayerData = null, currentBattleLog = [], currentBrawlers = [];
     const API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImE1MzEyYTE1LTIyMmUtNGJhZi1hYjc1LTE3MTRjY2JlZmE4MSIsImlhdCI6MTc4MDgzNDU0NSwic3ViIjoiZGV2ZWxvcGVyLzEzMDNlYTE1LWU1ZDItYmVh MS1hYmMwLTQ4YTk5MGIxZDIzYyIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiOTEuMTg4LjI1NC44NSJdLCJ0eXBlIjoiY2xpZW50In1dfQ.7UIqQGuWWosMtv-057EkHhuRvu81zYKzj4TE-6ww6bsbzPBdcjBOjlh6LN27mFDtoo6W5iN7H9Y6oPYbN_fkgQ";
+    const PROXY = "https://brawl-proxy.herokuapp.com/";
     async function fetchPlayer(tag) {
         let clean = tag.replace(/#/g,'').toUpperCase();
         let url = `https://api.brawlstars.com/v1/players/%23${clean}`;
-        let res = await fetch(url, { headers: { "Authorization": `Bearer ${API_KEY}` } });
-        if(res.status === 403) throw new Error("❌ КЛЮЧ НЕДЕЙСТВИТЕЛЕН. Удали старый ключ на developer.brawlstars.com и создай новый с IP: 91.188.254.85");
+        let proxiedUrl = PROXY + url;
+        let res = await fetch(proxiedUrl, { headers: { "Authorization": `Bearer ${API_KEY}` } });
+        if(res.status === 403) throw new Error("❌ КЛЮЧ НЕДЕЙСТВИТЕЛЕН. Удали старый ключ и создай новый с IP: 91.188.254.85");
         if(res.status === 404) throw new Error("❌ Игрок не найден. Проверь тег (пример: #2PPQVUQ8J)");
         if(!res.ok) throw new Error(`Ошибка ${res.status}: ${res.statusText}`);
         let player = await res.json();
-        let battleRes = await fetch(`https://api.brawlstars.com/v1/players/%23${clean}/battlelog`, { headers: { "Authorization": `Bearer ${API_KEY}` } });
+        let battleRes = await fetch(PROXY + `https://api.brawlstars.com/v1/players/%23${clean}/battlelog`, { headers: { "Authorization": `Bearer ${API_KEY}` } });
         let battleData = battleRes.ok ? await battleRes.json() : { items: [] };
         return { player, battleLog: battleData.items || [] };
     }
