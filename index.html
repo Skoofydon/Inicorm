@@ -1,1035 +1,1545 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Tracker BS • Brawl Stars</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif; }
-    :root {
-      --bg: #0a0c1a; --card: #151830; --card2: #1a1c38; --accent: #f7b32b;
-      --text: #fff; --sub: #888; --border: rgba(255,255,255,0.05);
-    }
-    .light-theme {
-      --bg: #f5f0e8; --card: #fff8e7; --card2: #f0e6d0; --accent: #e69900;
-      --text: #1a1a1a; --sub: #666; --border: rgba(0,0,0,0.08);
-    }
-    html, body {
-      background: var(--bg);
-      background-image: radial-gradient(ellipse at 20% 50%, rgba(255,180,0,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(255,100,100,0.04) 0%, transparent 50%);
-      min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
-      padding: 10px; color: var(--text); overflow-x: hidden; max-width: 100vw;
-    }
-    .app {
-      max-width: 460px; width: 100%; background: rgba(14,16,30,0.9); backdrop-filter: blur(30px);
-      border-radius: 28px; padding: 18px 14px 22px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 0 1.5px rgba(255,180,0,0.2);
-      border: 1px solid rgba(255,215,0,0.15); max-height: 95vh; overflow-y: auto; margin: 0 auto;
-    }
-    .light-theme .app { background: rgba(255,248,232,0.95); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-    .app::-webkit-scrollbar { width: 3px; }
-    .app::-webkit-scrollbar-thumb { background: rgba(255,180,0,0.3); border-radius: 10px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Список задач с процентовкой</title>
+    <style>
+        /* ==================== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ==================== */
+        :root {
+            --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            --transition-speed: 0.3s;
+            --radius-sm: 14px;
+            --radius: 20px;
+            --radius-lg: 26px;
+            --radius-xl: 34px;
+            --shadow-btn: 0 8px 20px rgba(0,0,0,0.25);
+            --shadow-card: 0 12px 36px rgba(0,0,0,0.2);
+            --backdrop-blur: 24px;
+            --btn-gradient: linear-gradient(145deg, #ffffff30, #ffffff10);
+        }
 
-    .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 6px; }
-    .logo-row { display: flex; align-items: center; gap: 8px; }
-    .logo {
-      font-weight: 900; font-size: 1.4rem;
-      background: linear-gradient(180deg, #ffe484 0%, #f7a600 80%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 15px rgba(255,170,0,0.5));
-    }
-    .premium-star { font-size: 0.9rem; animation: starGlow 1.5s infinite; }
-    @keyframes starGlow { 0%,100%{filter:drop-shadow(0 0 5px gold)} 50%{filter:drop-shadow(0 0 15px gold)} }
-    .mini-progress {
-      display: flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 700;
-      color: #4caf50; background: rgba(76,175,80,0.1); padding: 4px 8px; border-radius: 10px;
-    }
-    .mini-progress.down { color: #f44336; background: rgba(244,67,54,0.1); }
-    .theme-btn {
-      background: var(--card2); border: 1px solid var(--border); color: var(--text);
-      border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .coin-badge {
-      background: linear-gradient(135deg, #1e2040, #15172e); border-radius: 30px;
-      padding: 8px 14px; display: flex; align-items: center; gap: 6px; font-weight: bold;
-      font-size: 1rem; border: 1.5px solid rgba(255,200,0,0.4);
-      box-shadow: 0 0 15px rgba(255,180,0,0.15); white-space: nowrap; cursor: pointer;
-      margin-bottom: 12px; user-select: none;
-    }
-    .light-theme .coin-badge { background: #e8dcc0; border-color: #c9a030; }
-    .coin-icon { filter: drop-shadow(0 0 6px rgba(255,180,0,0.8)); font-size: 1.1rem; animation: coinPulse 3s infinite; }
-    @keyframes coinPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+        /* ==================== ТЕМЫ ==================== */
+        [data-theme="dark"] {
+            --bg: #0e0e1a;
+            --bg-secondary: #161630;
+            --card-bg: rgba(30, 30, 55, 0.65);
+            --card-bg-hover: rgba(40, 40, 70, 0.75);
+            --text: #f0f0fa;
+            --text-secondary: #b0b0d0;
+            --text-tertiary: #7a7aa0;
+            --accent: #8b7cf6;
+            --accent-glow: rgba(139, 124, 246, 0.5);
+            --border: rgba(255,255,255,0.08);
+            --border-strong: rgba(255,255,255,0.18);
+            --modal-overlay: rgba(0,0,0,0.7);
+            --tab-bg: rgba(20,20,45,0.85);
+            --tab-active: #8b7cf6;
+            --danger: #ff4757;
+            --danger-hover: #ff6b7a;
+            --success: #2ed573;
+            --success-glow: rgba(46,213,115,0.45);
+            --warning: #ffa502;
+            --input-bg: rgba(20,20,50,0.7);
+            --particle-colors: #8b7cf6, #2ed573, #ffa502, #ff4757;
+            --btn-gradient: linear-gradient(145deg, #ffffff15, #ffffff05);
+            --btn-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        }
+        [data-theme="light"] {
+            --bg: #f2f2f7;
+            --bg-secondary: #e5e5ea;
+            --card-bg: rgba(255,255,255,0.8);
+            --card-bg-hover: rgba(255,255,255,0.95);
+            --text: #1c1c1e;
+            --text-secondary: #636366;
+            --text-tertiary: #aeaeb8;
+            --accent: #007aff;
+            --accent-glow: rgba(0,122,255,0.3);
+            --border: rgba(0,0,0,0.05);
+            --border-strong: rgba(0,0,0,0.12);
+            --modal-overlay: rgba(0,0,0,0.35);
+            --tab-bg: rgba(255,255,255,0.9);
+            --tab-active: #007aff;
+            --danger: #ff3b30;
+            --danger-hover: #ff6259;
+            --success: #34c759;
+            --success-glow: rgba(52,199,89,0.35);
+            --warning: #ff9500;
+            --input-bg: rgba(240,240,248,0.9);
+            --particle-colors: #007aff, #34c759, #ff9500, #ff3b30;
+            --btn-gradient: linear-gradient(145deg, #ffffff, #f2f2f7);
+            --btn-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+        [data-theme="neon"] {
+            --bg: #050510;
+            --bg-secondary: #0a0a18;
+            --card-bg: rgba(15,15,35,0.6);
+            --card-bg-hover: rgba(25,25,50,0.7);
+            --text: #f0f0ff;
+            --text-secondary: #c0c0ff;
+            --text-tertiary: #8080cc;
+            --accent: #ff00ff;
+            --accent-glow: rgba(255,0,255,0.7);
+            --border: rgba(255,0,255,0.2);
+            --border-strong: rgba(255,0,255,0.4);
+            --modal-overlay: rgba(0,0,0,0.85);
+            --tab-bg: rgba(8,8,22,0.9);
+            --tab-active: #ff00ff;
+            --danger: #ff1744;
+            --danger-hover: #ff4d6a;
+            --success: #00ff88;
+            --success-glow: rgba(0,255,136,0.7);
+            --warning: #ffaa00;
+            --input-bg: rgba(10,10,25,0.8);
+            --particle-colors: #ff00ff, #00ffff, #ffaa00, #00ff88;
+            --btn-gradient: linear-gradient(145deg, #ffffff10, #ffffff05);
+            --btn-shadow: 0 6px 20px rgba(255,0,255,0.3);
+        }
+        [data-theme="glass"] {
+            --bg: #c8c8e0;
+            --bg-secondary: rgba(255,255,255,0.25);
+            --card-bg: rgba(255,255,255,0.35);
+            --card-bg-hover: rgba(255,255,255,0.5);
+            --text: #12122a;
+            --text-secondary: #4a4a6a;
+            --text-tertiary: #8888aa;
+            --accent: #5856d6;
+            --accent-glow: rgba(88,86,214,0.4);
+            --border: rgba(255,255,255,0.5);
+            --border-strong: rgba(255,255,255,0.7);
+            --modal-overlay: rgba(0,0,0,0.45);
+            --tab-bg: rgba(255,255,255,0.5);
+            --tab-active: #5856d6;
+            --danger: #ff3b30;
+            --danger-hover: #ff6259;
+            --success: #30d158;
+            --success-glow: rgba(48,209,88,0.4);
+            --warning: #ff9f0a;
+            --input-bg: rgba(255,255,255,0.45);
+            --particle-colors: #ffffff, #d0d0ff, #e0c0ff, #c0ffd0;
+            --btn-gradient: linear-gradient(145deg, #ffffff60, #ffffff30);
+            --btn-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            --backdrop-blur: 32px;
+        }
+        [data-theme="space"] {
+            --bg: #020616;
+            --bg-secondary: #0a1028;
+            --card-bg: rgba(15,25,55,0.7);
+            --card-bg-hover: rgba(20,35,70,0.8);
+            --text: #d0d8ff;
+            --text-secondary: #9098c8;
+            --text-tertiary: #5a6090;
+            --accent: #6d63ff;
+            --accent-glow: rgba(109,99,255,0.6);
+            --border: rgba(109,99,255,0.15);
+            --border-strong: rgba(109,99,255,0.3);
+            --modal-overlay: rgba(0,0,0,0.8);
+            --tab-bg: rgba(5,8,25,0.9);
+            --tab-active: #6d63ff;
+            --danger: #ff4d6a;
+            --danger-hover: #ff7a90;
+            --success: #4df0a0;
+            --success-glow: rgba(77,240,160,0.6);
+            --warning: #f0c040;
+            --input-bg: rgba(8,14,30,0.8);
+            --particle-colors: #6d63ff, #4df0a0, #f0c040, #ff4d6a;
+            --btn-gradient: linear-gradient(145deg, #ffffff10, #ffffff05);
+            --btn-shadow: 0 6px 18px rgba(0,0,0,0.5);
+            --star-opacity: 0.9;
+        }
+        [data-theme="pastel"] {
+            --bg: #f8f2ed;
+            --bg-secondary: #f0e8e0;
+            --card-bg: rgba(255,250,248,0.85);
+            --card-bg-hover: rgba(255,245,240,0.95);
+            --text: #5d4e4e;
+            --text-secondary: #8c7a7a;
+            --text-tertiary: #b8a8a8;
+            --accent: #c9a8a8;
+            --accent-glow: rgba(201,168,168,0.5);
+            --border: rgba(201,168,168,0.3);
+            --border-strong: rgba(201,168,168,0.5);
+            --modal-overlay: rgba(0,0,0,0.3);
+            --tab-bg: rgba(255,250,248,0.9);
+            --tab-active: #c9a8a8;
+            --danger: #e07b7b;
+            --danger-hover: #eb9a9a;
+            --success: #8fc9a8;
+            --success-glow: rgba(143,201,168,0.5);
+            --warning: #e0c090;
+            --input-bg: rgba(255,250,248,0.8);
+            --particle-colors: #e0c090, #c9a8a8, #8fc9a8, #e07b7b;
+            --btn-gradient: linear-gradient(145deg, #ffffff, #f8f2ed);
+            --btn-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
 
-    /* Табы */
-    .tab-toggle {
-      display: flex; background: #0e1030; border-radius: 40px; padding: 4px;
-      margin-bottom: 14px; gap: 4px; border: 1px solid #2a2d55;
-    }
-    .light-theme .tab-toggle { background: #e0d5b8; border-color: #c9a030; }
-    .tab-btn {
-      flex: 1; background: transparent; border: none; color: #888; font-weight: 700;
-      padding: 10px 8px; border-radius: 36px; font-size: 0.78rem; cursor: pointer;
-      transition: all 0.3s ease; white-space: nowrap; user-select: none;
-    }
-    .tab-btn.active {
-      background: linear-gradient(180deg, #5b8def 0%, #3b6fd4 100%); color: #fff;
-      box-shadow: 0 6px 16px rgba(59,111,212,0.5); font-weight: 800;
-    }
-
-    .mode-toggle {
-      display: flex; background: #0e1030; border-radius: 40px; padding: 4px;
-      margin-bottom: 14px; gap: 4px; border: 1px solid #2a2d55;
-    }
-    .light-theme .mode-toggle { background: #e0d5b8; border-color: #c9a030; }
-    .mode-btn {
-      flex: 1; background: transparent; border: none; color: #888; font-weight: 700;
-      padding: 10px 8px; border-radius: 36px; font-size: 0.78rem; cursor: pointer;
-      transition: all 0.3s ease; white-space: nowrap; user-select: none;
-    }
-    .mode-btn.active {
-      background: linear-gradient(180deg, #ffd966 0%, #f7a600 100%); color: #0a0a1a;
-      box-shadow: 0 6px 16px rgba(255,170,0,0.5); font-weight: 800;
-    }
-    .premium-badge {
-      background: linear-gradient(135deg, #ff6b6b, #ff3366); color: #fff; padding: 1px 6px;
-      border-radius: 8px; font-size: 0.6rem; font-weight: 800; margin-left: 2px;
-      box-shadow: 0 0 8px rgba(255,100,100,0.5);
-    }
-
-    /* Строка привязанного тега */
-    .bound-tag-row {
-      display: flex; align-items: center; gap: 8px; background: var(--card2);
-      border-radius: 16px; padding: 8px 12px; margin-bottom: 12px;
-      border: 1px solid var(--border); font-size: 0.8rem;
-    }
-    .bound-tag-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: #333; }
-    .bound-tag-fallback {
-      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
-      background: linear-gradient(135deg, #f7b32b, #e69900); color: #000; font-weight: 800;
-    }
-    .bound-tag-info { flex: 1; min-width: 0; }
-    .bound-tag-tag { font-weight: 700; font-size: 0.75rem; }
-    .bound-tag-name { font-size: 0.65rem; color: var(--sub); }
-    .bound-tag-badge {
-      font-size: 0.6rem; background: #4caf50; color: #fff; padding: 3px 8px;
-      border-radius: 8px; font-weight: 700; white-space: nowrap;
-    }
-    .change-tag-btn {
-      background: var(--accent); border: none; color: #000; font-weight: 700;
-      padding: 6px 12px; border-radius: 14px; font-size: 0.65rem; cursor: pointer;
-      white-space: nowrap;
-    }
-
-    /* Поиск */
-    .search-box { display: flex; gap: 8px; margin-bottom: 14px; }
-    .search-box input {
-      flex: 1; background: var(--card2); border: 2px solid var(--border); border-radius: 16px;
-      padding: 12px 14px; color: var(--text); font-size: 0.9rem; outline: none;
-      font-weight: 500; min-width: 0;
-    }
-    .search-box input:focus { border-color: var(--accent); }
-    .search-box button {
-      background: linear-gradient(180deg, #ffd966 0%, #f7a600 100%); border: none;
-      border-radius: 16px; padding: 12px 18px; font-weight: 800; color: #0a0a1a;
-      cursor: pointer; font-size: 0.85rem; box-shadow: 0 5px 0 #b26b00; user-select: none;
-    }
-    .search-box button:active { transform: translateY(2px); box-shadow: 0 3px 0 #b26b00; }
-
-    .card {
-      background: var(--card); border-radius: 20px; padding: 14px; margin: 12px 0;
-      border: 1px solid var(--border); box-shadow: 0 6px 16px rgba(0,0,0,0.3); width: 100%;
-    }
-    .card h3 { font-size: 0.95rem; margin-bottom: 10px; color: #f0d060; position: relative; z-index: 1; }
-    .card h4 { font-size: 0.85rem; margin-bottom: 8px; color: #ccc; position: relative; z-index: 1; }
-    .card-premium {
-      border: 2px solid rgba(255,180,0,0.5); box-shadow: 0 0 20px rgba(255,170,0,0.3), 0 6px 16px rgba(0,0,0,0.3);
-      position: relative; overflow: hidden;
-    }
-    .card-premium::before {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: conic-gradient(from 0deg, transparent, rgba(255,180,0,0.1), transparent, rgba(255,180,0,0.1), transparent);
-      animation: rotateGlow 4s linear infinite;
-    }
-    @keyframes rotateGlow { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-    .player-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .player-avatar, .player-avatar-fallback {
-      width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0;
-      border: 2px solid rgba(255,180,0,0.3); box-shadow: 0 0 12px rgba(255,180,0,0.2);
-    }
-    .player-avatar-fallback {
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-      background: linear-gradient(135deg, #2a2d55, #1a1c40);
-    }
-    .player-name { font-size: 1.05rem; font-weight: 800; }
-    .player-tag { color: var(--sub); font-size: 0.7rem; }
-    .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 10px; }
-    .stat-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-top: 10px; }
-    .stat-item {
-      background: var(--card2); border-radius: 12px; padding: 10px 6px; text-align: center;
-      border: 1px solid var(--border);
-    }
-    .stat-value {
-      font-size: 1.1rem; font-weight: 800;
-      background: linear-gradient(180deg, #ffd966, #f7a600);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .stat-value-small { font-size: 0.85rem; font-weight: 700; color: #f7b32b; }
-    .stat-label { font-size: 0.6rem; color: var(--sub); margin-top: 3px; }
-    .club-info {
-      display: flex; align-items: center; gap: 8px; background: var(--card2);
-      border-radius: 12px; padding: 10px 12px; margin-top: 8px;
-    }
-    .progress-bar { height: 10px; background: var(--card2); border-radius: 15px; margin: 8px 0; overflow: hidden; }
-    .progress-fill {
-      height: 100%; background: linear-gradient(90deg, #f9d56e, #fd9e2b); border-radius: 15px;
-      box-shadow: 0 0 12px rgba(255,170,0,0.5); transition: width 0.8s ease;
-    }
-    .battle-log { font-size: 0.78rem; max-height: 280px; overflow-y: auto; }
-    .log-entry {
-      display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
-      border-bottom: 1px solid var(--border); gap: 8px;
-    }
-    .log-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-    .log-brawler-img { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: #333; }
-    .log-brawler-fallback {
-      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex;
-      align-items: center; justify-content: center; font-size: 1rem; background: rgba(255,180,0,0.2);
-    }
-    .log-details { display: flex; flex-direction: column; min-width: 0; }
-    .log-brawler-name { font-weight: 700; font-size: 0.75rem; }
-    .log-mode { font-size: 0.65rem; color: var(--sub); }
-    .log-map { font-size: 0.6rem; color: #666; cursor: pointer; text-decoration: underline; }
-    .log-right { text-align: right; flex-shrink: 0; }
-    .log-result { padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 0.68rem; }
-    .victory { background: rgba(76,175,80,0.2); color: #4caf50; border: 1px solid rgba(76,175,80,0.3); }
-    .defeat { background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid rgba(244,67,54,0.3); }
-    .draw { background: rgba(255,235,59,0.15); color: #ffeb3b; border: 1px solid rgba(255,235,59,0.3); }
-    .trophy-change { font-size: 0.7rem; margin-top: 2px; font-weight: 600; }
-    .trophy-plus { color: #4caf50; }
-    .trophy-minus { color: #f44336; }
-    .daily-section {
-      background: linear-gradient(135deg, #141630, #101228); border-radius: 22px; padding: 14px;
-      margin: 14px 0; border: 1px solid rgba(255,200,0,0.15); box-shadow: 0 8px 0 #080914; width: 100%;
-    }
-    .light-theme .daily-section { background: #e8dcc0; box-shadow: 0 8px 0 #c9a030; }
-    .day-track { display: flex; justify-content: space-between; margin-bottom: 10px; gap: 4px; }
-    .day-item {
-      text-align: center; font-size: 0.58rem; background: var(--card2); border-radius: 10px;
-      padding: 6px 3px; flex: 1; font-weight: 700; color: #666; border: 2px solid transparent;
-    }
-    .day-item.collected {
-      background: linear-gradient(135deg, #f7b32b, #e69900); color: #0a0a1a;
-      box-shadow: 0 0 10px rgba(255,170,0,0.4);
-    }
-    .day-item.today {
-      border: 2px solid #ffe484; background: #252850; color: #fff; animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(255,200,0,0.5)} 70%{box-shadow:0 0 0 10px rgba(255,200,0,0)} 100%{box-shadow:0 0 0 0 rgba(255,200,0,0)} }
-    .claim-btn {
-      width: 100%; background: linear-gradient(180deg, #ffd966 0%, #f7a600 100%); border: none;
-      font-weight: 800; padding: 12px; border-radius: 24px; font-size: 0.9rem; color: #0d0d1c;
-      cursor: pointer; margin-top: 6px; box-shadow: 0 6px 0 #b26b00; user-select: none;
-    }
-    .claim-btn:active { transform: translateY(2px); box-shadow: 0 4px 0 #b26b00; }
-    .claim-btn:disabled { opacity: 0.5; box-shadow: 0 3px 0 #5e4a20; cursor: not-allowed; transform: none; }
-    .error-msg { color: #f44336; text-align: center; padding: 8px; font-size: 0.78rem; background: rgba(244,67,54,0.1); border-radius: 10px; margin-bottom: 8px; }
-    .success-msg { color: #4caf50; text-align: center; padding: 8px; font-size: 0.78rem; background: rgba(76,175,80,0.1); border-radius: 10px; margin-bottom: 8px; }
-    .daily-report { background: linear-gradient(135deg, #1a1c38, #252850); border-radius: 16px; padding: 12px; margin: 10px 0; border: 1px solid rgba(255,180,0,0.3); }
-    .graph-container { position: relative; height: 100px; margin: 10px 0; background: var(--card2); border-radius: 12px; overflow: hidden; width: 100%; }
-    .graph-canvas { width: 100%; height: 100%; display: block; }
-    .graph-labels { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--sub); margin-top: 4px; }
-    .streak-badge { display: inline-block; padding: 4px 10px; border-radius: 10px; font-weight: 700; font-size: 0.7rem; margin: 3px; }
-    .streak-win { background: rgba(76,175,80,0.2); color: #4caf50; }
-    .streak-lose { background: rgba(244,67,54,0.2); color: #f44336; }
-    .advice-box {
-      background: linear-gradient(135deg, #1e2745, #252850); border-radius: 16px; padding: 12px;
-      margin-top: 10px; border-left: 3px solid #f7b32b; position: relative; z-index: 1;
-    }
-    .brawler-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-    .brawler-table th { text-align: left; padding: 6px 4px; color: var(--accent); font-size: 0.6rem; border-bottom: 1px solid var(--border); }
-    .brawler-table td { padding: 6px 4px; border-bottom: 1px solid var(--border); }
-    .brawler-table .brawler-cell { display: flex; align-items: center; gap: 6px; }
-    .brawler-table-img { width: 24px; height: 24px; border-radius: 50%; background: #333; }
-    .brawler-table-fallback { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; background: rgba(255,180,0,0.2); }
-    .calendar-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-top: 6px; }
-    .calendar-day { background: var(--card2); border-radius: 6px; padding: 4px 2px; text-align: center; font-size: 0.55rem; color: var(--sub); }
-    .calendar-day.has-data { background: #252850; color: #f7b32b; font-weight: 700; }
-    .map-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
-    .map-modal.active { display: flex; }
-    .map-modal img { max-width: 90vw; max-height: 80vh; border-radius: 16px; border: 3px solid gold; }
-    .map-modal .close-btn { position: absolute; top: 20px; right: 20px; background: #f44336; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
-
-    /* Модалка смены тега */
-    .modal-overlay {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-box {
-      background: var(--card); border-radius: 20px; padding: 20px; width: 90%; max-width: 380px;
-      border: 1px solid var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-    }
-    .modal-box h3 { color: #f0d060; margin-bottom: 12px; }
-    .modal-box input {
-      width: 100%; background: var(--card2); border: 2px solid var(--border); border-radius: 14px;
-      padding: 12px 14px; color: var(--text); font-size: 0.9rem; outline: none; margin-bottom: 10px;
-    }
-    .modal-box input:focus { border-color: var(--accent); }
-    .modal-btns { display: flex; gap: 8px; }
-    .modal-btns button {
-      flex: 1; padding: 10px; border-radius: 14px; font-weight: 700; font-size: 0.8rem;
-      cursor: pointer; border: none;
-    }
-    .modal-btn-save { background: var(--accent); color: #000; }
-    .modal-btn-cancel { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
-  </style>
+        /* Общие стили начнутся во второй части */
+    </style>
 </head>
 <body>
-<div class="app" id="mainApp">
-  <div class="top-bar">
-    <div class="logo-row"><span class="logo">TRACKER BS</span><span class="premium-star" id="premiumStar" style="display:none">⭐</span></div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div class="mini-progress" id="miniProgress" style="display:none"></div>
-      <button class="theme-btn" id="themeToggle">🌓</button>
+    <canvas id="particleCanvas"></canvas>
+    <div id="app">
+        <div class="content">
+            <div class="header">
+                <h1>📋 Задачи</h1>
+                <div class="theme-toggle" id="themeToggle" title="Сменить тему">🎨</div>
+            </div>
+            <div class="toolbar">
+                <select id="categoryFilter"><option value="all">Все категории</option></select>
+                <select id="sortSelect">
+                    <option value="date-desc">Новые сверху</option>
+                    <option value="progress-desc">По прогрессу ↓</option>
+                    <option value="deadline-asc">По дедлайну ↑</option>
+                </select>
+            </div>
+            <div class="toolbar filter-group" id="statusFilters">
+                <button class="active" data-filter="all">Все</button>
+                <button data-filter="active">Активные</button>
+                <button data-filter="completed">Выполненные</button>
+                <button data-filter="overdue">Просроченные</button>
+            </div>
+            <div id="page-tasks" class="page active">
+                <div class="task-list" id="taskList"></div>
+                <button class="btn btn-primary" id="addTaskBtn" style="margin-top: 20px; width: 100%;">➕ Новая задача</button>
+            </div>
+            <div id="page-stats" class="page">
+                <h2 style="margin-bottom:20px;">📊 Статистика</h2>
+                <div class="stats-grid" id="statsGrid"></div>
+                <h3 style="margin:20px 0 8px;">📈 Выполнено за 7 дней</h3>
+                <canvas id="weeklyChart" width="300" height="150"></canvas>
+                <h3 style="margin:20px 0 8px;">🗂️ Задачи по категориям</h3>
+                <canvas id="categoryChart" width="200" height="200"></canvas>
+            </div>
+            <div id="page-settings" class="page">
+                <h2 style="margin-bottom:20px;">⚙️ Настройки</h2>
+                <div class="settings-group">
+                    <label>Тема оформления</label>
+                    <select id="themeSelect" style="width:100%; padding:14px; border-radius:30px; margin-top:8px;">
+                        <option value="dark">Тёмная</option>
+                        <option value="light">Светлая</option>
+                        <option value="neon">Неон</option>
+                        <option value="glass">Стеклянная (iOS)</option>
+                        <option value="space">Космическая</option>
+                        <option value="pastel">Пастельная</option>
+                    </select>
+                </div>
+                <div class="settings-group">
+                    <label>Управление категориями</label>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <input type="text" id="newCategoryInput" placeholder="Новая категория" style="flex:1; padding:14px; border-radius:30px;">
+                        <button id="addCategoryBtn" class="btn btn-primary" style="flex:0;">+</button>
+                    </div>
+                    <ul id="categoryList" style="list-style:none; margin-top:12px;"></ul>
+                </div>
+                <div class="settings-group export-import">
+                    <button id="exportBtn" class="btn btn-secondary">📤 Экспорт JSON</button>
+                    <button id="importBtn" class="btn btn-secondary">📥 Импорт JSON</button>
+                    <input type="file" id="importFile" accept=".json" style="display:none;">
+                </div>
+            </div>
+        </div>
+        <div class="tab-bar">
+            <div class="tab-item active" data-page="tasks"><span class="tab-icon">📝</span> Задачи</div>
+            <div class="tab-item" data-page="stats"><span class="tab-icon">📊</span> Статистика</div>
+            <div class="tab-item" data-page="settings"><span class="tab-icon">⚙️</span> Настройки</div>
+        </div>
     </div>
-  </div>
-  <div class="coin-badge" id="coinBadge"><span class="coin-icon">🪙</span> <span id="coinDisplay">0</span></div>
 
-  <!-- Табы: Профиль / Поиск -->
-  <div class="tab-toggle">
-    <button id="tabProfile" class="tab-btn active">👤 Мой профиль</button>
-    <button id="tabSearch" class="tab-btn">🔍 Поиск по тегу</button>
-  </div>
+    <!-- Модальное окно добавления/редактирования задачи (ОБНОВЛЕНО) -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <h2 id="modalTitle">Новая задача</h2>
+            <div class="input-group"><label>Название *</label><input type="text" id="modalName" placeholder="Обязательно"></div>
+            <div class="input-group"><label>Описание</label><textarea id="modalDesc" rows="2" placeholder="Необязательно"></textarea></div>
+            <div class="input-group"><label>Категория</label><select id="modalCategory"></select></div>
+            <div class="input-group"><label>Дедлайн</label><input type="date" id="modalDeadline"></div>
+            
+            <!-- Новый переключатель режима прогресса -->
+            <div class="input-group">
+                <label>Режим прогресса</label>
+                <div class="mode-switch">
+                    <label class="radio-label"><input type="radio" name="progressMode" value="manual" checked> Ручной процент</label>
+                    <label class="radio-label"><input type="radio" name="progressMode" value="auto"> Авто по цели</label>
+                </div>
+            </div>
+            <!-- Блок ручного выбора процента -->
+            <div class="input-group" id="manualPercentBlock">
+                <label>Прогресс</label>
+                <div class="percent-selector" id="percentSelector">
+                    <span class="percent-option" data-val="0">0%</span>
+                    <span class="percent-option" data-val="25">25%</span>
+                    <span class="percent-option" data-val="50">50%</span>
+                    <span class="percent-option" data-val="75">75%</span>
+                    <span class="percent-option selected" data-val="100">100%</span>
+                </div>
+            </div>
+            <!-- Блок автоматического расчёта по цели (скрыт по умолчанию) -->
+            <div class="input-group" id="autoPercentBlock" style="display:none;">
+                <label>Цель</label>
+                <input type="number" id="modalTarget" step="any" min="0.01" placeholder="Например, 10000">
+                <label style="margin-top:10px;">Выполнено</label>
+                <input type="number" id="modalCompleted" step="any" min="0" placeholder="0">
+            </div>
 
-  <!-- Строка привязанного тега (видна только в табе Профиль) -->
-  <div class="bound-tag-row" id="boundTagRow" style="display:none">
-    <div id="boundTagAvatarContainer"></div>
-    <div class="bound-tag-info">
-      <div class="bound-tag-name" id="boundTagName">-</div>
-      <div class="bound-tag-tag" id="boundTagTag">-</div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelModalBtn">Отмена</button>
+                <button class="btn btn-primary" id="saveModalBtn">Сохранить</button>
+            </div>
+        </div>
     </div>
-    <button class="change-tag-btn" id="changeTagBtn">✏️ Изменить</button>
-  </div>
 
-  <!-- Поиск (виден только в табе Поиск) -->
-  <div class="search-box" id="searchBox" style="display:none">
-    <input type="text" id="playerTag" placeholder="#2Y0G2GJ"><button id="searchBtn">🔍</button>
-  </div>
-
-  <div id="messageBox"></div>
-  <div id="dailyReport" class="daily-report" style="display:none"></div>
-  <div class="mode-toggle">
-    <button id="btnBasic" class="mode-btn active">🔹 Tracker BS</button>
-    <button id="btnPlus" class="mode-btn">⭐ Tracker BS+ <span class="premium-badge">PRO</span></button>
-  </div>
-  <div class="daily-section">
-    <div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:8px"><span>📅 ЕЖЕДНЕВНАЯ НАГРАДА</span><span id="dayCounter" style="color:#f7b32b;font-size:0.8rem">День 1/7</span></div>
-    <div class="day-track" id="dayTrack"></div>
-    <button id="claimButton" class="claim-btn">🎁 Забрать</button>
-    <div style="font-size:0.7rem;margin-top:6px;color:#888;text-align:center" id="dailyStatus"></div>
-  </div>
-  <div id="basicContent">
-    <div id="emptyState" class="card"><div style="text-align:center;padding:20px;color:#666"><div style="font-size:2.5rem;margin-bottom:8px">🔍</div><p id="emptyStateText">Привяжи свой тег в профиле или найди игрока</p></div></div>
-    <div id="playerBasicInfo" class="card" style="display:none">
-      <div class="player-info"><div id="playerAvatarContainer"></div><div style="min-width:0"><div class="player-name" id="playerName"></div><div class="player-tag" id="playerTagDisplay"></div></div></div>
-      <div class="stat-grid"><div class="stat-item"><div class="stat-value" id="playerTrophies">0</div><div class="stat-label">🏆 Кубки</div></div><div class="stat-item"><div class="stat-value" id="playerLevel">0</div><div class="stat-label">⭐ Уровень</div></div><div class="stat-item"><div class="stat-value" id="playerWins">0</div><div class="stat-label">🥇 Победы 3х3</div></div></div>
-      <div class="stat-grid-4"><div class="stat-item"><div class="stat-value-small" id="playerBrawlers">0</div><div class="stat-label">Бравлеры</div></div><div class="stat-item"><div class="stat-value-small" id="playerRecord">0</div><div class="stat-label">🏅 Рекорд</div></div><div class="stat-item"><div class="stat-value-small" id="playerXpLeft">-</div><div class="stat-label">XP до уровня</div></div><div class="stat-item"><div class="stat-value-small" id="playerCreated">-</div><div class="stat-label">📅 Создан</div></div></div>
-      <div id="clubInfoContainer" class="club-info" style="display:none"><span>👥</span><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:0.8rem" id="clubName">-</div><div style="font-size:0.65rem;color:#f7b32b" id="clubRole">-</div></div><div style="font-size:0.65rem;color:#888" id="clubMembers">-</div></div>
-      <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="trophyProgress" style="width:0%"></div></div>
-      <p style="font-size:0.65rem;color:#666;text-align:center;margin-top:4px">Прогресс до 400 000 🏆</p>
-      <div style="margin-top:8px;padding:10px;background:var(--card2);border-radius:10px"><p style="font-size:0.7rem;font-weight:700">❤️ Любимый боец</p><p style="font-size:0.8rem;margin-top:2px" id="favoriteBrawler">-</p></div>
+    <!-- Модальное окно подтверждения удаления (без изменений) -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h2>Удалить задачу?</h2>
+            <p style="text-align:center; margin:16px 0;">Это действие нельзя отменить.</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelConfirmBtn">Отмена</button>
+                <button class="btn btn-primary" id="confirmDeleteBtn" style="background:var(--danger);">Удалить</button>
+            </div>
+        </div>
     </div>
-    <div id="battleLogBasic" class="card" style="display:none">
-      <h4>⚔️ Последние бои</h4>
-      <div style="display:flex;gap:8px;margin-bottom:8px"><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:6px"><div style="color:#4caf50;font-weight:700;font-size:0.9rem" id="logWins">0</div><div style="font-size:0.6rem;color:#888">Побед</div></div><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:6px"><div style="color:#f44336;font-weight:700;font-size:0.9rem" id="logLosses">0</div><div style="font-size:0.6rem;color:#888">Поражений</div></div><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:6px"><div style="color:#ffeb3b;font-weight:700;font-size:0.9rem" id="logDraws">0</div><div style="font-size:0.6rem;color:#888">Ничьих</div></div></div>
-      <div class="battle-log" id="battleLogList"></div>
-    </div>
-  </div>
-  <div id="plusContent" style="display:none"><div id="plusRealContent">
-    <div class="card card-premium"><h3>📊 Расширенная статистика</h3><div class="stat-grid"><div class="stat-item"><div class="stat-value" id="plusWinrate">-</div><div class="stat-label">Винрейт</div></div><div class="stat-item"><div class="stat-value" id="plusAvgTrophy">-</div><div class="stat-label">Ср. кубки</div></div><div class="stat-item"><div class="stat-value" id="plusTrophyDiff">-</div><div class="stat-label">С прошлого</div></div></div><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><span class="streak-badge streak-win" id="plusWinStreak">🔥 Винстрик: -</span><span class="streak-badge streak-lose" id="plusLoseStreak">💀 Лузстрик: -</span><span style="background:rgba(255,180,0,0.15);padding:3px 8px;border-radius:8px;font-size:0.65rem;color:#f7b32b" id="plusBestTime">🕐 -</span></div></div>
-    <div class="card card-premium"><h3>💡 Персональный совет</h3><div class="advice-box" id="personalAdvice">Загрузи профиль для анализа...</div></div>
-    <div class="card card-premium"><h3>📈 График прогресса</h3><div class="graph-container"><canvas id="progressGraph" class="graph-canvas"></canvas></div><div class="graph-labels"><span id="graphMin">0</span><span style="color:#f7b32b">изменение кубков</span><span id="graphMax">0</span></div></div>
-    <div class="card card-premium"><h3>⭐ Все бойцы</h3><div style="max-height:250px;overflow-y:auto"><table class="brawler-table"><thead><tr><th>Боец</th><th>🏆</th><th>💪</th><th>🔧</th></tr></thead><tbody id="allBrawlersBody"><tr><td colspan="4" style="text-align:center;color:#666">Нет данных</td></tr></tbody></table></div></div>
-    <div class="card card-premium"><h3>🗺️ Анализ карт</h3><div style="display:flex;gap:8px"><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:8px"><p style="font-size:0.6rem;color:#888">Лучшая карта</p><p style="font-weight:700;color:#4caf50;font-size:0.7rem" id="bestMap">-</p></div><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:8px"><p style="font-size:0.6rem;color:#888">Худшая карта</p><p style="font-weight:700;color:#f44336;font-size:0.7rem" id="worstMap">-</p></div></div></div>
-    <div class="card card-premium"><h3>🎯 Анализ режимов</h3><div style="display:flex;gap:8px"><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:8px"><p style="font-size:0.6rem;color:#888">Лучший</p><p style="font-weight:700;color:#4caf50;font-size:0.7rem" id="bestMode">-</p></div><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:8px"><p style="font-size:0.6rem;color:#888">Худший</p><p style="font-weight:700;color:#f44336;font-size:0.7rem" id="worstMode">-</p></div><div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:8px"><p style="font-size:0.6rem;color:#888">Любимый</p><p style="font-weight:700;color:#f7b32b;font-size:0.7rem" id="favMode">-</p></div></div></div>
-    <div class="card card-premium"><h3>📅 Прогресс по дням</h3><div class="calendar-grid" id="calendarGrid"></div><p style="font-size:0.6rem;color:#888;text-align:center;margin-top:4px">Даты когда был поиск игрока</p></div>
-    <div class="card card-premium"><h3>🏆 История кубков</h3><div class="graph-container" style="height:100px"><canvas id="historyGraph" class="graph-canvas"></canvas></div><div class="graph-labels"><span id="histMin">-</span><span style="color:#4caf50">кубки</span><span id="histMax">-</span></div></div>
-    <div class="card card-premium"><h3>📋 Детальная статука по бойцам (из лога)</h3><div class="battle-log" id="detailedBrawlers" style="max-height:200px"><p style="color:#666;text-align:center">Загрузи профиль...</p></div></div>
-  </div></div>
-</div>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            transition: background var(--transition-speed), color var(--transition-speed);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #app {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 110px;
+            background: transparent;
+            z-index: 1;
+        }
+        canvas#particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 24px 18px 30px;
+        }
 
-<!-- Модалка смены тега -->
-<div class="modal-overlay" id="changeTagModal">
-  <div class="modal-box">
-    <h3>✏️ Изменить тег</h3>
-    <input type="text" id="changeTagInput" placeholder="Введи новый тег (#2Y0G2GJ)">
-    <div class="modal-btns">
-      <button class="modal-btn-cancel" id="changeTagCancel">Отмена</button>
-      <button class="modal-btn-save" id="changeTagSave">Сохранить</button>
-    </div>
-  </div>
-</div>
+        /* ---------- ШАПКА ---------- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--text), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--border-strong);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text);
+            box-shadow: var(--btn-shadow);
+            transition: all 0.25s;
+        }
+        .theme-toggle:active {
+            transform: scale(0.9);
+            background: var(--card-bg-hover);
+        }
 
-<!-- Модалка карты -->
-<div class="map-modal" id="mapModal">
-  <button class="close-btn" id="mapModalClose">✕</button>
-  <img id="mapModalImg" src="" alt="Карта">
-</div>
+        /* ---------- ИНСТРУМЕНТЫ ---------- */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .toolbar select, .toolbar button {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--border-strong);
+            border-radius: 30px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            font-family: var(--font);
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            background: var(--btn-gradient);
+            transition: all 0.25s;
+        }
+        .toolbar select:focus, .toolbar button:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+        .filter-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-group button {
+            border-radius: 30px;
+            padding: 10px 16px;
+            font-weight: 600;
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--border);
+            box-shadow: var(--btn-shadow);
+            transition: 0.2s;
+        }
+        .filter-group button.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 6px 18px var(--accent-glow);
+        }
 
-<script>
-(function() {
-  var API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImE1MzEyYTE1LTIyMmUtNGJhZi1hYjc1LTE3MTRjY2JlZmE4MSIsImlhdCI6MTc4MDgzNDU0NSwic3ViIjoiZGV2ZWxvcGVyLzEzMDNlYTE1LWU1ZDItYmVhMS1hYmMwLTQ4YTk5MGIxZDIzYyIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiOTEuMTg4LjI1NC44NSJdLCJ0eXBlIjoiY2xpZW50In1dfQ.7UIqQGuWWosMtv-057EkHhuRvu81zYKzj4TE-6ww6bsbzPBdcjBOjlh6LN27mFDtoo6W5iN7H9Y6oPYbN_fkgQ';
+        /* ---------- КАРТОЧКИ ЗАДАЧ ---------- */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .task-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1);
+            animation: fadeSlideUp 0.4s ease;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .task-card.completed {
+            opacity: 0.7;
+        }
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+        }
+        .task-title {
+            font-size: 20px;
+            font-weight: 650;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        .task-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .task-category {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: var(--accent);
+            color: #fff;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .task-deadline {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .progress-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 10px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 10px;
+            transition: width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+        .progress-percent {
+            font-size: 16px;
+            font-weight: 700;
+            min-width: 48px;
+            text-align: right;
+            color: var(--accent);
+            transition: color 0.3s;
+        }
+        /* Новый блок для отображения цели в auto-задачах */
+        .task-auto-info {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .task-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-  var modeTr = {
-    'gemGrab':'💎 Захват','soloShowdown':'🔥 Соло ШД','duoShowdown':'🔥 Дуо ШД',
-    'trioShowdown':'🔥 Трио ШД','heist':'💰 Ограбление','bounty':'🎯 Награда',
-    'brawlBall':'⚽ Броубол','basketBrawl':'🏀 Баскетбол','siege':'🏰 Осада',
-    'hotZone':'🎪 Гор.зона','knockout':'🥊 Нокаут','volleyBrawl':'🏐 Волейбол',
-    'wipeout':'💥 Ликвидация','payload':'🚚 Груз'
-  };
-  var mapTr = {
-    'Flying Fantasies':'Летающие фантазии','Gem Fort':'Самоцветный форт',
-    'Hard Rock Mine':'Шахта','Crystal Arcade':'Аркада','Double Swoosh':'Двойной свист',
-    'Undermine':'Подкоп','Snake Prairie':'Змеиная прерия','Shooting Star':'Падающая звезда',
-    'Kaboom Canyon':'Кабум каньон','Safe Zone':'Безопасная зона','Super Beach':'Супер пляж',
-    'Pinhole Punt':'Точечный удар','Center Stage':'Центр сцены','Ring of Fire':'Кольцо огня',
-    'Open Zone':'Открытая зона','Dueling Beetles':'Дуэль жуков','Slam Dunk':'Слэм-данк',
-    'Pinball Dreams':'Пинбол','Field Goal':'Ворота','Backyard Bowl':'Задний двор',
-    'Out in the Open':'На открытом воздухе','Hideout':'Укрытие','Island Invasion':'Вторжение',
-    'Feast or Famine':'Пир или голод','Skull Creek':'Черепной ручей','Riverside':'Берег реки'
-  };
-  var dailyRewards = [100,150,250,250,500,300,1200];
-  var PLUS_COST = 1500;
-  var PLUS_DAYS = 7;
+        /* iOS-кнопки с объёмом и анимацией */
+        .btn-icon {
+            background: var(--btn-gradient);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-strong);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text);
+            box-shadow: var(--btn-shadow);
+            transition: all 0.15s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-icon:active {
+            transform: scale(0.88);
+            box-shadow: inset 0 3px 12px rgba(0,0,0,0.2);
+            background: var(--card-bg-hover);
+        }
+        .btn-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            background: radial-gradient(circle, var(--accent) 10%, transparent 10%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.4s, opacity 0.8s;
+        }
+        .btn-icon:active::after {
+            transform: scale(2.5);
+            opacity: 0.15;
+            transition: 0s;
+        }
+        .btn-icon.danger {
+            color: var(--danger);
+        }
+        .progress-btns {
+            display: flex;
+            gap: 6px;
+        }
+        .progress-btns button {
+            background: var(--btn-gradient);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-strong);
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-btns button:active {
+            transform: scale(0.93);
+            box-shadow: 0 4px 14px var(--accent-glow);
+            background: var(--accent);
+            color: #fff;
+        }
+        .progress-btns button::after {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            background: radial-gradient(circle, var(--accent) 10%, transparent 10%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.4s, opacity 0.8s;
+        }
+        .progress-btns button:active::after {
+            transform: scale(2.5);
+            opacity: 0.2;
+            transition: 0s;
+        }
 
-  // Состояние
-  var coins = parseInt(localStorage.getItem('bs_coins')) || 0;
-  var currentDay = parseInt(localStorage.getItem('bs_day')) || 1;
-  var collectedToday = localStorage.getItem('bs_collected_today') === 'true';
-  var lastDate = localStorage.getItem('bs_last_date') || '';
-  var plusExpiry = localStorage.getItem('bs_plus_expiry') || '';
-  var activeMode = 'basic';
-  var currentTab = localStorage.getItem('bs_tab') || 'profile'; // 'profile' или 'search'
-  var currentPlayerData = null;
-  var currentBattleLog = [];
-  var trophyHistory = [];
-  try { trophyHistory = JSON.parse(localStorage.getItem('bs_trophy_history') || '[]'); } catch(e) { trophyHistory = []; }
-  if (!Array.isArray(trophyHistory)) trophyHistory = [];
-  var myTag = localStorage.getItem('bs_my_tag') || '';
-  var isLightTheme = localStorage.getItem('bs_theme') === 'light';
-  var dailyReportShownToday = localStorage.getItem('bs_report_shown') === getTodayString();
+        /* ---------- МОДАЛЬНЫЕ ОКНА ---------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            width: 100%; max-width: 500px;
+            padding: 28px 22px 34px;
+            box-shadow: 0 -12px 48px rgba(0,0,0,0.4);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        .modal h2 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .input-group {
+            margin-bottom: 18px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-strong);
+            background: var(--input-bg);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 16px;
+            transition: 0.2s;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+        .percent-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .percent-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 30px;
+            border: 1px solid var(--border-strong);
+            background: var(--input-bg);
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+        .percent-option.selected {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+        /* Стили для переключателя режима */
+        .mode-switch {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text);
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .radio-label input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        .radio-label:has(input:checked) {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--btn-shadow);
+            background: var(--btn-gradient);
+            color: var(--text);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:active {
+            transform: scale(0.94);
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            background: radial-gradient(circle, var(--accent) 10%, transparent 10%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.4s, opacity 0.8s;
+        }
+        .btn:active::after {
+            transform: scale(2.5);
+            opacity: 0.2;
+            transition: 0s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+        .btn-secondary {
+            background: var(--card-bg);
+            border: 1px solid var(--border-strong);
+            color: var(--text);
+        }
 
-  if (localStorage.getItem('bs_premium_test') !== 'done') {
-    var d = new Date(); d.setDate(d.getDate() + PLUS_DAYS);
-    plusExpiry = d.toISOString();
-    localStorage.setItem('bs_plus_expiry', plusExpiry);
-    localStorage.setItem('bs_premium_test', 'done');
-  }
-  if (localStorage.getItem('bs_init_v7') !== 'done') {
-    coins = 0; currentDay = 1; collectedToday = false; lastDate = '';
-    localStorage.setItem('bs_init_v7', 'done');
-  }
+        /* ---------- ТАБЫ ---------- */
+        .tab-bar {
+            position: fixed;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 100%; max-width: 500px;
+            background: var(--tab-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 24px;
+            z-index: 100;
+            border-radius: 28px 28px 0 0;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.15);
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 6px 14px;
+        }
+        .tab-item.active {
+            color: var(--tab-active);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+        .tab-icon { font-size: 24px; margin-bottom: 2px; }
 
-  function saveAll() {
-    localStorage.setItem('bs_coins', coins);
-    localStorage.setItem('bs_day', currentDay);
-    localStorage.setItem('bs_collected_today', collectedToday);
-    localStorage.setItem('bs_last_date', lastDate);
-    localStorage.setItem('bs_my_tag', myTag);
-    localStorage.setItem('bs_theme', isLightTheme ? 'light' : 'dark');
-    localStorage.setItem('bs_plus_expiry', plusExpiry);
-    localStorage.setItem('bs_trophy_history', JSON.stringify(trophyHistory));
-    localStorage.setItem('bs_report_shown', dailyReportShownToday ? getTodayString() : '');
-    localStorage.setItem('bs_tab', currentTab);
-  }
+        /* ---------- СТРАНИЦЫ ---------- */
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  function getTodayString() {
-    var d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-  }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 12px var(--accent-glow);
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        canvas {
+            display: block;
+            margin: 10px auto;
+        }
+        .settings-group {
+            margin-bottom: 24px;
+        }
+        .export-import {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+    </style>
+        <script>
+        // ==================== ГЛОБАЛЬНЫЕ ДАННЫЕ ====================
+        const DEFAULT_CATEGORIES = ['Работа', 'Учёба', 'Дом', 'Здоровье', 'Личное'];
+        const CATEGORY_COLORS = ['#8b7cf6','#ff6b6b','#4ecdc4','#ffd93d','#6bcb77','#ff8a5c','#a29bfe','#fd79a8'];
+        let tasks = [];
+        let categories = [...DEFAULT_CATEGORIES];
+        let currentFilter = 'all';
+        let currentSort = 'date-desc';
+        let editingTaskId = null;
+        let theme = localStorage.getItem('todo_theme') || 'dark';
 
-  function isPlusActive() {
-    if (!plusExpiry || plusExpiry === 'null' || plusExpiry === 'undefined') return false;
-    var d = new Date(plusExpiry);
-    return !isNaN(d.getTime()) && d > new Date();
-  }
+        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+        function saveData() {
+            localStorage.setItem('todo_tasks', JSON.stringify(tasks));
+            localStorage.setItem('todo_categories', JSON.stringify(categories));
+            localStorage.setItem('todo_theme', theme);
+        }
 
-  function checkDayReset() {
-    var today = getTodayString();
-    if (lastDate !== today) {
-      collectedToday = false;
-      dailyReportShownToday = false;
-      if (lastDate) {
-        if (currentDay >= 7) currentDay = 1;
-        else currentDay++;
-      }
-      lastDate = today;
-      if (currentDay > 7) currentDay = 1;
-      saveAll();
-    }
-  }
+        // Нормализация задачи: добавляет недостающие поля для поддержки старых данных
+        function normalizeTask(task) {
+            if (!task.mode) {
+                task.mode = 'manual';
+                task.target = null;
+                task.completed = null;
+            }
+            if (task.percent === undefined || task.percent === null) {
+                task.percent = 0;
+            }
+            return task;
+        }
 
-  function showMsg(text, type) {
-    var box = document.getElementById('messageBox');
-    if (!box) return;
-    box.innerHTML = '<div class="' + type + '-msg">' + text + '</div>';
-    setTimeout(function() { if (box) box.innerHTML = ''; }, 3000);
-  }
+        function loadData() {
+            const savedTasks = localStorage.getItem('todo_tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks).map(normalizeTask);
+            }
+            const savedCategories = localStorage.getItem('todo_categories');
+            if (savedCategories) categories = JSON.parse(savedCategories);
+            theme = localStorage.getItem('todo_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('themeSelect').value = theme;
+        }
 
-  function getBrawlerImgUrl(id) { return id ? 'https://cdn.brawlify.com/brawler/' + id + '.png' : ''; }
-  function getAvatarUrl(p) { return (p && p.icon && p.icon.id) ? 'https://cdn.brawlify.com/profile/' + p.icon.id + '.png' : ''; }
-  function getMapImgUrl(name) {
-    var ids = {'Flying Fantasies':'15000511','Gem Fort':'15000000','Hard Rock Mine':'15000001','Crystal Arcade':'15000006','Double Swoosh':'15000002','Undermine':'15000003','Snake Prairie':'15000007','Shooting Star':'15000004','Kaboom Canyon':'15000008','Safe Zone':'15000009','Super Beach':'15000010','Pinhole Punt':'15000012','Center Stage':'15000013','Ring of Fire':'15000014','Open Zone':'15000015','Dueling Beetles':'15000016'};
-    var id = ids[name];
-    return id ? 'https://cdn.brawlify.com/map/' + id + '.png' : '';
-  }
+        function getCategoryColor(catName) {
+            const idx = categories.indexOf(catName);
+            return CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
+        }
 
-  function getBattleData(raw) {
-    var b = raw.battle || {}, e = raw.event || {};
-    var name = 'Боец', bid = null;
-    if (typeof b.brawler === 'string') name = b.brawler;
-    else if (b.brawler && b.brawler.name) { name = b.brawler.name; bid = b.brawler.id; }
-    return { battleTime: raw.battleTime, mode: e.mode || b.mode || null, map: e.map || null, result: b.result || null, brawlerName: name, brawlerId: bid, trophyChange: b.trophyChange, rank: b.rank };
-  }
+        function escapeHtml(text) {
+            return String(text).replace(/[&<>"]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
+        }
 
-  function getResult(bd) {
-    var r = bd.result;
-    if (r === 'victory' || r === 'soloVictories' || r === 'duoVictories' || r === '3v3Victories') return 'victory';
-    if (r === 'defeat') return 'defeat';
-    if (r === 'draw') return 'draw';
-    if (bd.trophyChange > 0) return 'victory';
-    if (bd.trophyChange < 0) return 'defeat';
-    if (bd.rank != null) {
-      if (bd.mode === 'soloShowdown' || bd.mode === 'trioShowdown') return bd.rank <= 4 ? 'victory' : 'defeat';
-      if (bd.mode === 'duoShowdown') return bd.rank <= 2 ? 'victory' : 'defeat';
-    }
-    return 'draw';
-  }
+        // ==================== АНИМАЦИЯ ЧИСЕЛ (ПЛАВНАЯ) ====================
+        function animateValue(element, start, end, duration = 350) {
+            if (start === end) {
+                element.textContent = end + '%';
+                return;
+            }
+            const range = end - start;
+            const startTime = performance.now();
+            function step(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.round(start + range * progress);
+                element.textContent = current + '%';
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = end + '%';
+                }
+            }
+            requestAnimationFrame(step);
+        }
 
-  function getXpLeft(p) {
-    if (!p.expLevel || p.expPoints === undefined) return '-';
-    var left = (p.expLevel + 1) * 100 - p.expPoints;
-    return left < 0 ? '0' : left.toLocaleString();
-  }
+        // ==================== ЧАСТИЦЫ (CANVAS) ====================
+        const particleCanvas = document.getElementById('particleCanvas');
+        const pCtx = particleCanvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+        function initParticles() {
+            const colors = getComputedStyle(document.body).getPropertyValue('--particle-colors').split(',').map(s => s.trim());
+            particles = [];
+            for (let i = 0; i < 35; i++) {
+                particles.push({
+                    x: Math.random() * particleCanvas.width,
+                    y: Math.random() * particleCanvas.height,
+                    radius: Math.random() * 40 + 10,
+                    dx: (Math.random() - 0.5) * 0.5,
+                    dy: (Math.random() - 0.5) * 0.5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: Math.random() * 0.15 + 0.05
+                });
+            }
+        }
+        function animateParticles() {
+            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            particles.forEach(p => {
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < -p.radius) p.x = particleCanvas.width + p.radius;
+                if (p.x > particleCanvas.width + p.radius) p.x = -p.radius;
+                if (p.y < -p.radius) p.y = particleCanvas.height + p.radius;
+                if (p.y > particleCanvas.height + p.radius) p.y = -p.radius;
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                pCtx.fillStyle = p.color;
+                pCtx.globalAlpha = p.alpha;
+                pCtx.fill();
+                pCtx.globalAlpha = 1.0;
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+                    // ==================== ОТРИСОВКА ЗАДАЧ ====================
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            let filtered = tasks.filter(t => {
+                if (currentFilter === 'active') return t.percent < 100;
+                if (currentFilter === 'completed') return t.percent === 100;
+                if (currentFilter === 'overdue') {
+                    if (!t.deadline || t.percent === 100) return false;
+                    return new Date(t.deadline) < new Date() && t.percent < 100;
+                }
+                return true;
+            });
 
-  function showMapModal(name) {
-    var url = getMapImgUrl(name);
-    if (!url) return;
-    document.getElementById('mapModalImg').src = url;
-    document.getElementById('mapModal').classList.add('active');
-  }
+            if (currentSort === 'date-desc') filtered.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+            else if (currentSort === 'progress-desc') filtered.sort((a,b) => b.percent - a.percent);
+            else if (currentSort === 'deadline-asc') {
+                filtered.sort((a,b) => {
+                    if (!a.deadline && !b.deadline) return 0;
+                    if (!a.deadline) return 1;
+                    if (!b.deadline) return -1;
+                    return new Date(a.deadline) - new Date(b.deadline);
+                });
+            }
 
-  function setAvatarEl(containerId, player, clsImg, clsFallback) {
-    var c = document.getElementById(containerId);
-    if (!c) return;
-    var url = getAvatarUrl(player);
-    var initial = ((player && (player.name || player.tag)) || '?').charAt(0).toUpperCase();
-    if (url) {
-      c.innerHTML = '<img class="' + clsImg + '" src="' + url + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="' + clsFallback + '" style="display:none">' + initial + '</div>';
-    } else {
-      c.innerHTML = '<div class="' + clsFallback + '">' + initial + '</div>';
-    }
-  }
+            container.innerHTML = filtered.map(task => {
+                const catColor = getCategoryColor(task.category);
+                const isCompleted = task.percent === 100;
+                const deadlineText = task.deadline ? new Date(task.deadline).toLocaleDateString('ru') : '';
+                const overdue = task.deadline && new Date(task.deadline) < new Date() && task.percent < 100;
+                // Для авто-режима показываем цель и выполнено
+                const autoInfo = (task.mode === 'auto' && task.target !== null)
+                    ? `<div class="task-auto-info" data-task-id="${task.id}">${task.completed ?? 0} / ${task.target}</div>`
+                    : '';
+                return `
+                <div class="task-card ${isCompleted ? 'completed' : ''}" data-id="${task.id}">
+                    <div class="task-title">${escapeHtml(task.name)}</div>
+                    ${task.desc ? `<div class="task-desc">${escapeHtml(task.desc)}</div>` : ''}
+                    <div class="task-meta">
+                        <span class="task-category" style="background:${catColor};">${escapeHtml(task.category)}</span>
+                        <span class="task-deadline" style="color:${overdue ? 'var(--danger)' : 'var(--text-tertiary)'};">${deadlineText ? '⏰ '+deadlineText : ''}</span>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width:${task.percent}%; background:${task.percent===100 ? 'var(--success)' : 'var(--accent)'};"></div>
+                        </div>
+                        <span class="progress-percent" data-task-id="${task.id}">${task.percent}%</span>
+                    </div>
+                    ${autoInfo}
+                    <div class="task-actions">
+                        <div class="progress-btns">
+                            <button onclick="changeProgress('${task.id}', -25)">−25%</button>
+                            <button onclick="changeProgress('${task.id}', 25)">+25%</button>
+                        </div>
+                        <button class="btn-icon" onclick="openEditModal('${task.id}')" title="Редактировать">✏️</button>
+                        <button class="btn-icon danger" onclick="confirmDelete('${task.id}')" title="Удалить">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
 
-  function brawlerImgHTML(imgUrl, clsImg, clsFallback) {
-    if (!imgUrl) return '<div class="' + clsFallback + '">⭐</div>';
-    return '<img class="' + clsImg + '" src="' + imgUrl + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="' + clsFallback + '" style="display:none">⭐</div>';
-  }
+        // Изменение прогресса (универсальное для manual и auto)
+        function changeProgress(id, deltaPercent) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            const oldPercent = task.percent;
 
-  function startAutoRefresh() {
-    setInterval(function() {
-      if (myTag && document.visibilityState === 'visible') searchPlayer(myTag, true);
-    }, 30 * 60 * 1000);
-  }
+            if (task.mode === 'manual') {
+                let newPercent = Math.min(100, Math.max(0, oldPercent + deltaPercent));
+                if (oldPercent === newPercent) return;
+                task.percent = newPercent;
+                if (newPercent === 100 && !task.completedAt) task.completedAt = new Date().toISOString();
+                if (newPercent < 100) task.completedAt = null;
+            } else if (task.mode === 'auto') {
+                // deltaPercent это 25 или -25, но в авто режиме меняем completed на 25% от target
+                const target = task.target || 0;
+                if (target <= 0) return;
+                let completed = task.completed ?? 0;
+                completed += (deltaPercent / 100) * target; // deltaPercent = ±25 -> completed += ±0.25*target
+                completed = Math.max(0, completed); // не отрицательное
+                task.completed = completed;
+                let newPercent = target > 0 ? Math.min(100, Math.round((completed / target) * 100)) : 0;
+                task.percent = newPercent;
+                if (newPercent === 100 && !task.completedAt) task.completedAt = new Date().toISOString();
+                if (newPercent < 100) task.completedAt = null;
+            }
+            saveData();
 
-  function switchTab(tab) {
-    currentTab = tab;
-    saveAll();
-    refreshUI();
-    // Автозагрузка профиля при переключении на вкладку профиля
-    if (tab === 'profile' && myTag) {
-      searchPlayer(myTag, true);
-    }
-  }
+            // Обновление DOM элементов карточки
+            const card = document.querySelector(`.task-card[data-id="${id}"]`);
+            if (!card) return;
+            const percentSpan = card.querySelector('.progress-percent');
+            const fillBar = card.querySelector('.progress-bar-fill');
+            if (percentSpan) {
+                animateValue(percentSpan, oldPercent, task.percent, 350);
+            }
+            if (fillBar) {
+                fillBar.style.width = task.percent + '%';
+                fillBar.style.background = task.percent === 100 ? 'var(--success)' : 'var(--accent)';
+            }
+            // Обновление информации auto-режима
+            const autoInfo = card.querySelector('.task-auto-info');
+            if (autoInfo && task.mode === 'auto' && task.target !== null) {
+                autoInfo.textContent = `${task.completed ?? 0} / ${task.target}`;
+            }
+            // Обновление класса completed
+            if (task.percent === 100) {
+                card.classList.add('completed');
+                const title = card.querySelector('.task-title');
+                if (title) title.style.textDecoration = 'line-through';
+            } else {
+                card.classList.remove('completed');
+                const title = card.querySelector('.task-title');
+                if (title) title.style.textDecoration = 'none';
+            }
+            // Если открыта страница статистики, обновить её
+            if (document.getElementById('page-stats').classList.contains('active')) {
+                updateStats();
+            }
+        }
 
-  function openChangeTagModal() {
-    document.getElementById('changeTagInput').value = myTag;
-    document.getElementById('changeTagModal').classList.add('active');
-  }
+        // ==================== СОЗДАНИЕ, РЕДАКТИРОВАНИЕ, УДАЛЕНИЕ ====================
+        function addTask(name, desc, category, mode, percentOrTarget, completedVal, deadline) {
+            let percent, target = null, completed = null;
+            if (mode === 'manual') {
+                percent = parseInt(percentOrTarget);
+            } else {
+                target = parseFloat(percentOrTarget);
+                completed = completedVal !== undefined ? parseFloat(completedVal) : 0;
+                percent = target > 0 ? Math.min(100, Math.round((completed / target) * 100)) : 0;
+            }
+            const task = {
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2,5),
+                name,
+                desc,
+                category,
+                mode,
+                percent,
+                target,
+                completed,
+                deadline: deadline || null,
+                createdAt: new Date().toISOString(),
+                completedAt: percent === 100 ? new Date().toISOString() : null
+            };
+            tasks.push(task);
+            saveData();
+            renderAll();
+        }
 
-  function closeChangeTagModal() {
-    document.getElementById('changeTagModal').classList.remove('active');
-  }
+        function updateTask(id, updates) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            // Обновляем поля
+            if (updates.mode !== undefined) task.mode = updates.mode;
+            if (updates.name !== undefined) task.name = updates.name;
+            if (updates.desc !== undefined) task.desc = updates.desc;
+            if (updates.category !== undefined) task.category = updates.category;
+            if (updates.deadline !== undefined) task.deadline = updates.deadline;
 
-  function saveNewTag() {
-    var newTag = document.getElementById('changeTagInput').value.trim();
-    if (!newTag) { showMsg('❌ Введи тег!', 'error'); return; }
-    myTag = newTag;
-    saveAll();
-    closeChangeTagModal();
-    showMsg('✅ Тег изменён! Загружаю профиль...', 'success');
-    searchPlayer(myTag);
-  }
+            if (task.mode === 'manual') {
+                if (updates.percent !== undefined) {
+                    task.percent = parseInt(updates.percent);
+                }
+                task.target = null;
+                task.completed = null;
+            } else {
+                if (updates.target !== undefined) task.target = parseFloat(updates.target);
+                if (updates.completed !== undefined) task.completed = parseFloat(updates.completed);
+                // Пересчёт процента
+                if (task.target > 0) {
+                    task.percent = Math.min(100, Math.round(((task.completed ?? 0) / task.target) * 100));
+                } else {
+                    task.percent = 0;
+                }
+            }
+            if (task.percent === 100 && !task.completedAt) task.completedAt = new Date().toISOString();
+            if (task.percent < 100) task.completedAt = null;
 
-  async function searchPlayer(tag, silent) {
-    try {
-      var clean = tag.replace('#','').trim().toUpperCase();
-      var enc = encodeURIComponent('#' + clean);
-      var resp = await fetch('https://api.brawlstars.com/v1/players/' + enc, {
-        headers: { 'Authorization': 'Bearer ' + API_KEY, 'Accept': 'application/json' }
-      });
-      if (!resp.ok) throw new Error('Игрок не найден (код ' + resp.status + ')');
-      var data = await resp.json();
-      var oldTrophies = currentPlayerData ? currentPlayerData.trophies : data.trophies;
-      currentPlayerData = data;
-      displayPlayerInfo(data);
-      await loadBattleLog(clean);
-      if (tag === myTag) {
-        localStorage.setItem('bs_last_player', tag);
-        updateBoundTagRow(data);
-        updateMiniProgress(data.trophies - oldTrophies);
-      }
-      if (!silent) showMsg('✅ Игрок найден!', 'success');
-      return data;
-    } catch (e) {
-      console.error(e);
-      if (!silent) {
-        showMsg('❌ ' + e.message, 'error');
-        var bi = document.getElementById('playerBasicInfo');
-        var bl = document.getElementById('battleLogBasic');
-        var es = document.getElementById('emptyState');
-        if (bi) bi.style.display = 'none';
-        if (bl) bl.style.display = 'none';
-        if (es) es.style.display = 'block';
-      }
-      return null;
-    }
-  }
+            saveData();
+            renderAll();
+        }
 
-  function updateMiniProgress(diff) {
-    var el = document.getElementById('miniProgress');
-    if (!el) return;
-    if (diff === 0) { el.style.display = 'none'; return; }
-    el.style.display = 'flex';
-    if (diff > 0) { el.className = 'mini-progress'; el.textContent = '📈 +' + diff; }
-    else { el.className = 'mini-progress down'; el.textContent = '📉 ' + diff; }
-  }
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveData();
+            renderAll();
+        }
 
-  function updateBoundTagRow(player) {
-    var row = document.getElementById('boundTagRow');
-    if (currentTab === 'profile' && myTag) {
-      row.style.display = 'flex';
-      document.getElementById('boundTagName').textContent = player.name;
-      document.getElementById('boundTagTag').textContent = player.tag;
-      setAvatarEl('boundTagAvatarContainer', player, 'bound-tag-avatar', 'bound-tag-fallback');
-    } else {
-      row.style.display = 'none';
-    }
-  }
+        function confirmDelete(id) {
+            document.getElementById('confirmModal').classList.add('active');
+            document.getElementById('confirmDeleteBtn').onclick = () => {
+                deleteTask(id);
+                closeModal();
+            };
+        }
 
-  async function loadBattleLog(tag) {
-    try {
-      var resp = await fetch('https://api.brawlstars.com/v1/players/%23' + tag + '/battlelog', {
-        headers: { 'Authorization': 'Bearer ' + API_KEY, 'Accept': 'application/json' }
-      });
-      if (!resp.ok) { var bl = document.getElementById('battleLogBasic'); if (bl) bl.style.display = 'none'; return; }
-      var data = await resp.json();
-      currentBattleLog = (data.items || []).map(function(b) { return getBattleData(b); });
-      displayBattleLog(currentBattleLog);
-      if (isPlusActive()) updatePlusContent();
-    } catch (e) {
-      var bl = document.getElementById('battleLogBasic');
-      if (bl) bl.style.display = 'none';
-    }
-  }
+        // ==================== МОДАЛЬНЫЕ ОКНА ====================
+        function openModal(title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('taskModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+            document.getElementById('confirmModal').classList.remove('active');
+            editingTaskId = null;
+        }
 
-  function displayPlayerInfo(p) {
-    var es = document.getElementById('emptyState');
-    var bi = document.getElementById('playerBasicInfo');
-    if (es) es.style.display = 'none';
-    if (!bi) return;
-    bi.style.display = 'block';
-    document.getElementById('playerName').textContent = p.name;
-    document.getElementById('playerTagDisplay').textContent = p.tag;
-    document.getElementById('playerTrophies').textContent = p.trophies.toLocaleString();
-    document.getElementById('playerLevel').textContent = p.expLevel || '?';
-    document.getElementById('playerWins').textContent = (p['3vs3Victories'] || 0).toLocaleString();
-    document.getElementById('playerBrawlers').textContent = (p.brawlers || []).length;
-    document.getElementById('playerRecord').textContent = (p.highestTrophies || p.trophies).toLocaleString();
-    document.getElementById('playerXpLeft').textContent = getXpLeft(p);
-    document.getElementById('playerCreated').textContent = (p.createdAt || p.creationDate) ? new Date(p.createdAt || p.creationDate).toLocaleDateString('ru-RU') : 'Неизвестно';
-    setAvatarEl('playerAvatarContainer', p, 'player-avatar', 'player-avatar-fallback');
+        // Переключение видимости блоков в зависимости от выбранного режима
+        function toggleProgressMode() {
+            const mode = document.querySelector('input[name="progressMode"]:checked').value;
+            document.getElementById('manualPercentBlock').style.display = (mode === 'manual') ? 'block' : 'none';
+            document.getElementById('autoPercentBlock').style.display = (mode === 'auto') ? 'block' : 'none';
+        }
 
-    var ci = document.getElementById('clubInfoContainer');
-    if (p.club && p.club.name) {
-      if (ci) ci.style.display = 'flex';
-      document.getElementById('clubName').textContent = p.club.name;
-      var roles = {president:'Президент',vicePresident:'Вице-президент',senior:'Старейшина',member:'Участник'};
-      document.getElementById('clubRole').textContent = roles[p.club.role] || p.club.role || 'Участник';
-      document.getElementById('clubMembers').textContent = p.club.memberCount ? p.club.memberCount + ' чел.' : '';
-    } else {
-      if (ci) ci.style.display = 'none';
-    }
+        function openAddModal() {
+            document.getElementById('modalName').value = '';
+            document.getElementById('modalDesc').value = '';
+            document.getElementById('modalDeadline').value = '';
+            document.getElementById('modalTarget').value = '';
+            document.getElementById('modalCompleted').value = '0';
+            // Установить режим manual по умолчанию
+            document.querySelector('input[name="progressMode"][value="manual"]').checked = true;
+            toggleProgressMode();
+            // Сбросить выбор процента на 0
+            document.querySelectorAll('#percentSelector .percent-option').forEach(el => el.classList.remove('selected'));
+            document.querySelector('#percentSelector .percent-option[data-val="0"]').classList.add('selected');
+            renderModalCategories();
+            openModal('Новая задача');
+        }
 
-    var fb = (p.brawlers || []).sort(function(a,b) { return b.trophies - a.trophies; })[0];
-    document.getElementById('favoriteBrawler').textContent = fb ? fb.name + ' (🏆' + fb.trophies + ')' : '-';
-    document.getElementById('trophyProgress').style.width = Math.min((p.trophies / 400000) * 100, 100) + '%';
+        function openEditModal(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            editingTaskId = id;
+            document.getElementById('modalName').value = task.name;
+            document.getElementById('modalDesc').value = task.desc || '';
+            document.getElementById('modalDeadline').value = task.deadline || '';
+            // Установить режим
+            const modeRadio = document.querySelector(`input[name="progressMode"][value="${task.mode}"]`);
+            if (modeRadio) modeRadio.checked = true;
+            toggleProgressMode();
+            // Заполнить соответствующие поля
+            if (task.mode === 'manual') {
+                document.querySelectorAll('#percentSelector .percent-option').forEach(el => {
+                    el.classList.toggle('selected', el.dataset.val == task.percent);
+                });
+                document.getElementById('modalTarget').value = '';
+                document.getElementById('modalCompleted').value = '0';
+            } else {
+                document.getElementById('modalTarget').value = task.target ?? '';
+                document.getElementById('modalCompleted').value = task.completed ?? 0;
+            }
+            renderModalCategories();
+            document.getElementById('modalCategory').value = task.category;
+            openModal('Редактирование');
+        }
 
-    var today = getTodayString();
-    if (!trophyHistory.length || trophyHistory[trophyHistory.length-1].date !== today) {
-      trophyHistory.push({ date: today, trophies: p.trophies });
-      if (trophyHistory.length > 90) trophyHistory.shift();
-      saveAll();
-    }
+        function saveModal() {
+            const name = document.getElementById('modalName').value.trim();
+            if (!name) { alert('Введите название задачи'); return; }
+            const desc = document.getElementById('modalDesc').value.trim();
+            const category = document.getElementById('modalCategory').value;
+            const deadline = document.getElementById('modalDeadline').value;
+            const mode = document.querySelector('input[name="progressMode"]:checked').value;
 
-    if (p.tag === myTag && !dailyReportShownToday && trophyHistory.length >= 2) {
-      showDailyReport();
-      dailyReportShownToday = true;
-      saveAll();
-    }
+            if (mode === 'manual') {
+                const selectedPercent = document.querySelector('#percentSelector .percent-option.selected');
+                const percent = selectedPercent ? selectedPercent.dataset.val : '0';
+                if (editingTaskId) {
+                    updateTask(editingTaskId, { name, desc, category, deadline, mode, percent: parseInt(percent) });
+                } else {
+                    addTask(name, desc, category, mode, percent, undefined, deadline);
+                }
+            } else { // auto
+                const targetStr = document.getElementById('modalTarget').value.trim();
+                const completedStr = document.getElementById('modalCompleted').value.trim();
+                const target = parseFloat(targetStr);
+                const completed = completedStr !== '' ? parseFloat(completedStr) : 0;
+                if (isNaN(target) || target <= 0) {
+                    alert('Введите положительное целевое значение');
+                    return;
+                }
+                if (isNaN(completed) || completed < 0) {
+                    alert('Выполненное значение не может быть отрицательным');
+                    return;
+                }
+                if (editingTaskId) {
+                    updateTask(editingTaskId, { name, desc, category, deadline, mode, target, completed });
+                } else {
+                    addTask(name, desc, category, mode, target, completed, deadline);
+                }
+            }
+            closeModal();
+        }
 
-    // Обновляем строку привязанного тега
-    if (p.tag === myTag) updateBoundTagRow(p);
-  }
+        // Обработчик переключения режима в модальном окне
+        document.querySelectorAll('input[name="progressMode"]').forEach(radio => {
+            radio.addEventListener('change', toggleProgressMode);
+        });
+                    // ==================== КАТЕГОРИИ ====================
+        function renderCategoryFilter() {
+            const select = document.getElementById('categoryFilter');
+            select.innerHTML = '<option value="all">Все категории</option>' +
+                categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        }
 
-  function showDailyReport() {
-    var rd = document.getElementById('dailyReport');
-    if (!rd || trophyHistory.length < 2) return;
-    var y = trophyHistory[trophyHistory.length-2].trophies;
-    var t = trophyHistory[trophyHistory.length-1].trophies;
-    var diff = t - y;
-    var sign = diff >= 0 ? '+' : '';
-    var wins = currentBattleLog.filter(function(b) { return getResult(b) === 'victory'; }).length;
-    var best = null;
-    for (var i = 0; i < currentBattleLog.length; i++) {
-      if (getResult(currentBattleLog[i]) === 'victory') { best = currentBattleLog[i]; break; }
-    }
-    rd.style.display = 'block';
-    rd.innerHTML = '<strong>📋 Ежедневный отчёт</strong><br><span>Изменение кубков: <span style="color:' + (diff>=0?'#4caf50':'#f44336') + '">' + sign + diff + ' 🏆</span></span><br><span>Побед сегодня: ' + wins + '</span><br>' + (best ? '<span>Лучший бой: ' + best.brawlerName + ' +' + (best.trophyChange||0) + '🏆</span><br>' : '') + '<span style="font-size:0.65rem;color:#888">Заходи каждый день за наградой!</span>';
-  }
+        function renderModalCategories() {
+            const select = document.getElementById('modalCategory');
+            select.innerHTML = categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        }
 
-  function displayBattleLog(battles) {
-    var ld = document.getElementById('battleLogBasic');
-    var ll = document.getElementById('battleLogList');
-    if (!ld || !ll) return;
-    if (!battles || !battles.length) { ld.style.display = 'none'; return; }
-    ld.style.display = 'block';
-    var w = 0, l = 0, d = 0;
-    ll.innerHTML = battles.slice(0,25).map(function(b) {
-      var name = b.brawlerName || 'Боец';
-      var mode = modeTr[b.mode] || b.mode || 'Бой';
-      var map = mapTr[b.map] || b.map || '';
-      var res = getResult(b);
-      var rc, rt;
-      if (res === 'victory') { rc = 'victory'; rt = 'Победа'; w++; }
-      else if (res === 'defeat') { rc = 'defeat'; rt = 'Поражение'; l++; }
-      else { rc = 'draw'; rt = 'Ничья'; d++; }
-      var rankInfo = b.rank != null ? ' (#' + b.rank + ')' : '';
-      var th = '';
-      if (b.trophyChange != null) {
-        var cls = b.trophyChange > 0 ? 'trophy-plus' : b.trophyChange < 0 ? 'trophy-minus' : '';
-        th = '<div class="trophy-change ' + cls + '">' + (b.trophyChange>0?'+':'') + b.trophyChange + ' 🏆</div>';
-      }
-      var mc = b.map ? 'data-map="' + b.map.replace(/"/g,'&quot;') + '" class="log-map map-clickable"' : '';
-      var imgHTML = brawlerImgHTML(getBrawlerImgUrl(b.brawlerId), 'log-brawler-img', 'log-brawler-fallback');
-      return '<div class="log-entry"><div class="log-left">' + imgHTML + '<div class="log-details"><span class="log-brawler-name">' + name + rankInfo + '</span><span class="log-mode">' + mode + '</span>' + (map ? '<span ' + mc + '>🗺️ ' + map + '</span>' : '') + '</div></div><div class="log-right"><span class="log-result ' + rc + '">' + rt + '</span>' + th + '</div></div>';
-    }).join('');
-    document.getElementById('logWins').textContent = w;
-    document.getElementById('logLosses').textContent = l;
-    document.getElementById('logDraws').textContent = d;
+        function renderCategoryList() {
+            const ul = document.getElementById('categoryList');
+            ul.innerHTML = categories.map(c => `
+                <li style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--card-bg); backdrop-filter:blur(10px); margin-bottom:8px; border-radius:20px; border:1px solid var(--border);">
+                    <span>🎨 ${escapeHtml(c)}</span>
+                    <button class="btn-icon danger" onclick="deleteCategory('${escapeHtml(c)}')" style="width:36px;height:36px;">🗑️</button>
+                </li>`).join('');
+        }
 
-    ll.querySelectorAll('.map-clickable').forEach(function(el) {
-      el.addEventListener('click', function() {
-        var mapName = this.getAttribute('data-map');
-        if (mapName) showMapModal(mapName);
-      });
-    });
-  }
+        function addCategory(name) {
+            const trimmed = name.trim();
+            if (!trimmed || categories.includes(trimmed)) return;
+            categories.push(trimmed);
+            saveData();
+            renderAll();
+        }
 
-  function updatePlusContent() {
-    if (!currentPlayerData || !isPlusActive()) return;
-    var p = currentPlayerData;
-    var bl = currentBattleLog;
-    document.getElementById('premiumStar').style.display = 'inline-block';
+        function deleteCategory(name) {
+            if (categories.length <= 1) return;
+            categories = categories.filter(c => c !== name);
+            tasks.forEach(t => { if (t.category === name) t.category = categories[0]; });
+            saveData();
+            renderAll();
+        }
 
-    var ab = (p.brawlers || []).sort(function(a,b) { return b.trophies - a.trophies; });
-    var tbody = document.getElementById('allBrawlersBody');
-    if (tbody) {
-      tbody.innerHTML = ab.length ? ab.map(function(b) {
-        var ih = brawlerImgHTML(getBrawlerImgUrl(b.id), 'brawler-table-img', 'brawler-table-fallback');
-        return '<tr><td><div class="brawler-cell">' + ih + '<span>' + b.name + '</span></div></td><td>🏆' + b.trophies + '</td><td>💪' + (b.power||'?') + '</td><td>' + (b.gadgets||[]).length + '🔧 ' + (b.starPowers||[]).length + '⭐</td></tr>';
-      }).join('') : '<tr><td colspan="4" style="text-align:center;color:#666">Нет данных</td></tr>';
-    }
+        // ==================== СТАТИСТИКА ====================
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.percent === 100).length;
+            const overdue = tasks.filter(t => t.deadline && new Date(t.deadline) < new Date() && t.percent < 100).length;
+            const activeTasks = tasks.filter(t => t.percent < 100);
+            const avgPercent = activeTasks.length ? Math.round(activeTasks.reduce((s,t) => s + t.percent, 0) / activeTasks.length) : 0;
 
-    if (!bl.length) return;
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${total}</div>
+                    <div class="stat-label">Всего задач</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:var(--success);">${completed}</div>
+                    <div class="stat-label">Выполнено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:var(--danger);">${overdue}</div>
+                    <div class="stat-label">Просрочено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${avgPercent}%</div>
+                    <div class="stat-label">Средний прогресс</div>
+                </div>
+            `;
 
-    var wins = 0, losses = 0;
-    var tc = [];
-    bl.forEach(function(b) {
-      var r = getResult(b);
-      if (r === 'victory') wins++;
-      else if (r === 'defeat') losses++;
-      if (b.trophyChange != null) tc.push(b.trophyChange);
-    });
-    var total = wins + losses;
-    document.getElementById('plusWinrate').textContent = total > 0 ? Math.round((wins/total)*100) + '%' : '-';
-    document.getElementById('plusAvgTrophy').textContent = tc.length ? (tc.reduce(function(a,b){return a+b;},0)>0?'+':'') + Math.round(tc.reduce(function(a,b){return a+b;},0)/tc.length) : '-';
+            drawWeeklyChart();
+            drawCategoryChart();
+        }
 
-    if (trophyHistory.length > 1) {
-      var diff = trophyHistory[trophyHistory.length-1].trophies - trophyHistory[trophyHistory.length-2].trophies;
-      var de = document.getElementById('plusTrophyDiff');
-      de.textContent = (diff > 0 ? '+' : '') + diff;
-      de.className = 'stat-value ' + (diff >= 0 ? 'diff-positive' : 'diff-negative');
-    }
+        function drawWeeklyChart() {
+            const canvas = document.getElementById('weeklyChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                days.push(d.toLocaleDateString('ru', {weekday:'short'}));
+            }
+            const counts = Array(7).fill(0);
+            tasks.forEach(t => {
+                if (t.percent === 100 && t.completedAt) {
+                    const compDate = new Date(t.completedAt).toLocaleDateString();
+                    const today = new Date();
+                    for (let i=6; i>=0; i--) {
+                        const d = new Date(); d.setDate(d.getDate()-i);
+                        if (d.toLocaleDateString() === compDate) counts[6-i]++;
+                    }
+                }
+            });
+            const maxVal = Math.max(...counts, 1);
+            const barWidth = (w-40)/7;
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-tertiary');
+            ctx.font = 'bold 10px system-ui';
+            days.forEach((day,i) => {
+                const x = 20 + i*barWidth;
+                ctx.fillText(day, x+2, h-4);
+                const barH = (counts[i]/maxVal)*(h-30);
+                const gradient = ctx.createLinearGradient(x, h-20, x, h-20-barH);
+                gradient.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--accent'));
+                gradient.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--success'));
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, h-20-barH, barWidth-6, barH);
+                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text');
+                ctx.fillText(counts[i], x+2, h-24-barH);
+            });
+        }
 
-    var mw = 0, ml = 0, cw = 0, cl = 0;
-    bl.forEach(function(b) {
-      var r = getResult(b);
-      if (r === 'victory') { cw++; cl = 0; mw = Math.max(mw, cw); }
-      else if (r === 'defeat') { cl++; cw = 0; ml = Math.max(ml, cl); }
-      else { cw = 0; cl = 0; }
-    });
-    document.getElementById('plusWinStreak').textContent = '🔥 Винстрик: ' + mw;
-    document.getElementById('plusLoseStreak').textContent = '💀 Лузстрик: ' + ml;
+        function drawCategoryChart() {
+            const canvas = document.getElementById('categoryChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            const catCounts = {};
+            tasks.forEach(t => { catCounts[t.category] = (catCounts[t.category]||0)+1; });
+            const entries = Object.entries(catCounts);
+            if (entries.length===0) return;
+            const total = entries.reduce((s,e)=>s+e[1],0);
+            let startAngle = -Math.PI/2;
+            entries.forEach(([cat, count]) => {
+                const sliceAngle = (count/total)*2*Math.PI;
+                ctx.fillStyle = getCategoryColor(cat);
+                ctx.beginPath();
+                ctx.moveTo(w/2, h/2);
+                ctx.arc(w/2, h/2, 70, startAngle, startAngle+sliceAngle);
+                ctx.closePath();
+                ctx.fill();
+                startAngle += sliceAngle;
+            });
+        }
 
-    var tw = {};
-    bl.forEach(function(b) {
-      if (getResult(b) === 'victory' && b.battleTime) {
-        var h = new Date(b.battleTime).getHours();
-        var period = h < 6 ? '🌙 Ночь' : h < 12 ? '☀️ Утро' : h < 18 ? '🌤️ День' : '🌇 Вечер';
-        tw[period] = (tw[period] || 0) + 1;
-      }
-    });
-    var bt = Object.entries(tw).sort(function(a,b) { return b[1]-a[1]; })[0];
-    document.getElementById('plusBestTime').textContent = bt ? '🕐 ' + bt[0] : '🕐 -';
+        // ==================== ТЕМЫ ====================
+        function setTheme(t) {
+            theme = t;
+            document.documentElement.setAttribute('data-theme', theme);
+            saveData();
+            document.getElementById('themeSelect').value = theme;
+            initParticles();
+        }
 
-    var ms = {}, mps = {};
-    bl.forEach(function(b) {
-      var mode = b.mode || 'unknown';
-      if (!ms[mode]) ms[mode] = { wins: 0, total: 0 };
-      ms[mode].total++;
-      if (getResult(b) === 'victory') ms[mode].wins++;
-      var map = b.map || 'unknown';
-      if (!mps[map]) mps[map] = { wins: 0, total: 0 };
-      mps[map].total++;
-      if (getResult(b) === 'victory') mps[map].wins++;
-    });
+        // ==================== ЭКСПОРТ / ИМПОРТ ====================
+        function exportData() {
+            const data = { tasks, categories, theme };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'tasks_backup.json'; a.click();
+            URL.revokeObjectURL(url);
+        }
+        function importData(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.tasks && data.categories) {
+                        tasks = data.tasks.map(normalizeTask); // нормализуем импортированные задачи
+                        categories = data.categories;
+                        if (data.theme) setTheme(data.theme);
+                        saveData();
+                        renderAll();
+                    }
+                } catch (err) { alert('Ошибка импорта файла'); }
+            };
+            reader.readAsText(file);
+        }
 
-    var ma = Object.entries(ms).map(function(e) { return {mode:e[0], wr:e[1].wins/e[1].total, total:e[1].total}; });
-    if (ma.length) {
-      var byWr = ma.slice().sort(function(a,b) { return b.wr - a.wr; });
-      document.getElementById('bestMode').textContent = modeTr[byWr[0].mode] || byWr[0].mode;
-      document.getElementById('worstMode').textContent = modeTr[byWr[byWr.length-1].mode] || byWr[byWr.length-1].mode;
-      var byTot = ma.slice().sort(function(a,b) { return b.total - a.total; });
-      document.getElementById('favMode').textContent = modeTr[byTot[0].mode] || byTot[0].mode;
-      document.getElementById('personalAdvice').innerHTML = '<p>📈 <strong>Лучший режим:</strong> ' + (modeTr[byWr[0].mode]||byWr[0].mode) + ' (винрейт ' + Math.round(byWr[0].wr*100) + '%)</p><p>📉 <strong>Избегай:</strong> ' + (modeTr[byWr[byWr.length-1].mode]||byWr[byWr.length-1].mode) + ' (винрейт ' + Math.round(byWr[byWr.length-1].wr*100) + '%)</p><p style="margin-top:4px">💡 <em>Играй в своём лучшем режиме чтобы поднять кубки!</em></p>';
-    }
+        // ==================== ПОЛНАЯ ПЕРЕРИСОВКА ====================
+        function renderAll() {
+            renderTasks();
+            renderCategoryFilter();
+            renderCategoryList();
+            updateStats();
+        }
 
-    var mpa = Object.entries(mps).map(function(e) { return {map:e[0], wr:e[1].wins/e[1].total}; });
-    if (mpa.length) {
-      mpa.sort(function(a,b) { return b.wr - a.wr; });
-      document.getElementById('bestMap').textContent = mapTr[mpa[0].map] || mpa[0].map;
-      document.getElementById('worstMap').textContent = mapTr[mpa[mpa.length-1].map] || mpa[mpa.length-1].map;
-    }
+        // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+        document.getElementById('addTaskBtn').addEventListener('click', openAddModal);
+        document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+        document.getElementById('saveModalBtn').addEventListener('click', saveModal);
+        document.getElementById('cancelConfirmBtn').addEventListener('click', closeModal);
+        document.querySelectorAll('#percentSelector .percent-option').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('#percentSelector .percent-option').forEach(e => e.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
 
-    var bs = {};
-    bl.forEach(function(b) {
-      var name = b.brawlerName || 'Боец';
-      if (!bs[name]) bs[name] = { wins: 0, total: 0, trophies: 0 };
-      bs[name].total++;
-      if (getResult(b) === 'victory') bs[name].wins++;
-      if (b.trophyChange) bs[name].trophies += b.trophyChange;
-    });
-    var dd = document.getElementById('detailedBrawlers');
-    var sorted = Object.entries(bs).sort(function(a,b) { return b[1].total - a[1].total; }).slice(0,10);
-    if (dd) {
-      dd.innerHTML = sorted.length ? sorted.map(function(e) {
-        var n = e[0], s = e[1];
-        return '<div class="log-entry"><span>⭐ <strong>' + n + '</strong></span><div style="text-align:right"><span style="color:#f7b32b">WR: ' + Math.round((s.wins/s.total)*100) + '%</span><span style="font-size:0.65rem;color:#888;display:block">' + s.total + ' боёв | ' + (s.trophies>0?'+':'') + s.trophies + '🏆</span></div></div>';
-      }).join('') : '<p style="color:#666;text-align:center">Нет данных</p>';
-    }
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const themes = ['dark','light','neon','glass','space','pastel'];
+            const idx = themes.indexOf(theme);
+            const next = themes[(idx+1)%themes.length];
+            setTheme(next);
+        });
+        document.getElementById('themeSelect').addEventListener('change', (e) => setTheme(e.target.value));
 
-    drawProgressGraph(bl);
-    drawCalendar();
-    drawHistoryGraph();
-  }
+        document.getElementById('categoryFilter').addEventListener('change', (e) => {
+            if (e.target.value === 'all') currentFilter = 'all';
+            else currentFilter = e.target.value;
+            renderTasks();
+        });
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            renderTasks();
+        });
+        document.querySelectorAll('#statusFilters button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#statusFilters button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderTasks();
+            });
+        });
 
-  function drawProgressGraph(bl) {
-    var canvas = document.getElementById('progressGraph');
-    if (!canvas || bl.length < 2) { document.getElementById('graphMin').textContent='-'; document.getElementById('graphMax').textContent='-'; return; }
-    canvas.width = canvas.parentElement.clientWidth - 4;
-    canvas.height = 100;
-    var ctx = canvas.getContext('2d');
-    var recent = bl.slice(0,25).reverse();
-    var changes = recent.map(function(b) { return b.trophyChange || 0; });
-    var cum = 0;
-    var pts = changes.map(function(tc) { cum += tc; return cum; });
-    var maxV = Math.max.apply(null, pts.concat([1]));
-    var minV = Math.min.apply(null, pts.concat([0]));
-    var range = maxV - minV || 1;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.beginPath(); ctx.strokeStyle = '#f7b32b'; ctx.lineWidth = 2;
-    pts.forEach(function(p,i) { var x = (i/(pts.length-1))*canvas.width; var y = canvas.height-((p-minV)/range)*(canvas.height-12)-6; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
-    ctx.stroke();
-    document.getElementById('graphMin').textContent = minV;
-    document.getElementById('graphMax').textContent = '+' + maxV;
-  }
+        document.getElementById('addCategoryBtn').addEventListener('click', () => {
+            const input = document.getElementById('newCategoryInput');
+            addCategory(input.value);
+            input.value = '';
+        });
+        document.getElementById('exportBtn').addEventListener('click', exportData);
+        document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            if (e.target.files[0]) importData(e.target.files[0]);
+        });
 
-  function drawCalendar() {
-    var grid = document.getElementById('calendarGrid');
-    if (!grid) return;
-    var days = [];
-    for (var i = 29; i >= 0; i--) { var d = new Date(); d.setDate(d.getDate()-i); days.push(d); }
-    var hd = trophyHistory.map(function(h) { return h.date; });
-    grid.innerHTML = days.map(function(d) {
-      var ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-      return '<div class="calendar-day ' + (hd.indexOf(ds) !== -1 ? 'has-data' : '') + '">' + d.getDate() + '.' + (d.getMonth()+1) + '</div>';
-    }).join('');
-  }
+        // Табы
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.dataset.page;
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page-'+page).classList.add('active');
+                if (page === 'stats') updateStats();
+            });
+        });
 
-  function drawHistoryGraph() {
-    var canvas = document.getElementById('historyGraph');
-    if (!canvas || trophyHistory.length < 2) { document.getElementById('histMin').textContent='-'; document.getElementById('histMax').textContent='-'; return; }
-    canvas.width = canvas.parentElement.clientWidth - 4;
-    canvas.height = 100;
-    var ctx = canvas.getContext('2d');
-    var trophies = trophyHistory.map(function(h) { return h.trophies; });
-    var maxT = Math.max.apply(null, trophies);
-    var minT = Math.min.apply(null, trophies);
-    var range = maxT - minT || 1;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.beginPath(); ctx.strokeStyle = '#4caf50'; ctx.lineWidth = 2;
-    trophies.forEach(function(t,i) { var x = (i/(trophies.length-1))*canvas.width; var y = canvas.height-((t-minT)/range)*(canvas.height-12)-6; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
-    ctx.stroke();
-    document.getElementById('histMin').textContent = minT.toLocaleString();
-    document.getElementById('histMax').textContent = maxT.toLocaleString();
-  }
+        // Закрытие модалок по клику на оверлей
+        document.getElementById('taskModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+        document.getElementById('confirmModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-  function claimReward() {
-    if (collectedToday || currentDay > 7) return;
-    var reward = dailyRewards[currentDay - 1] || 0;
-    coins += reward;
-    collectedToday = true;
-    if (currentDay < 7) currentDay++;
-    else if (currentDay >= 7) currentDay = 8;
-    saveAll();
-    refreshUI();
-    showMsg('🎉 Получено ' + reward + ' монет!', 'success');
-  }
-
-  function setMode(mode) {
-    if (mode === 'plus' && !isPlusActive()) {
-      showMsg('❌ Tracker BS+ не активирован! Купи за ' + PLUS_COST + ' 🪙 (на ' + PLUS_DAYS + ' дней)', 'error');
-      return;
-    }
-    activeMode = mode;
-    refreshUI();
-    if (mode === 'plus' && currentPlayerData && isPlusActive()) setTimeout(function() { updatePlusContent(); }, 100);
-  }
-
-  function purchasePlus() {
-    if (isPlusActive()) {
-      var daysLeft = Math.ceil((new Date(plusExpiry) - new Date()) / 86400000);
-      showMsg('✅ Премиум активен ещё ' + daysLeft + ' дн.', 'success');
-      return;
-    }
-    if (coins < PLUS_COST) { showMsg('❌ Недостаточно монет! Нужно ' + PLUS_COST + ' 🪙', 'error'); return; }
-    coins -= PLUS_COST;
-    var d = new Date(); d.setDate(d.getDate() + PLUS_DAYS);
-    plusExpiry = d.toISOString();
-    saveAll();
-    refreshUI();
-    if (currentPlayerData) updatePlusContent();
-    showMsg('✅ Tracker BS+ активирован на ' + PLUS_DAYS + ' дней!', 'success');
-  }
-
-  function toggleTheme() {
-    isLightTheme = !isLightTheme;
-    document.getElementById('mainApp').classList.toggle('light-theme', isLightTheme);
-    saveAll();
-  }
-
-  function refreshUI() {
-    document.getElementById('coinDisplay').textContent = coins;
-    renderDayTrack();
-    document.getElementById('dayCounter').textContent = currentDay > 7 ? 'Цикл завершён' : 'День ' + currentDay + '/7';
-    var cb = document.getElementById('claimButton');
-    if (collectedToday || currentDay > 7) {
-      cb.disabled = true;
-      cb.textContent = '✅ Получено';
-      document.getElementById('dailyStatus').textContent = currentDay > 7 ? 'Завтра новый цикл' : 'Сегодня получено';
-    } else {
-      cb.disabled = false;
-      cb.textContent = '🎁 Забрать ' + (dailyRewards[currentDay-1] || 0) + ' монет';
-      document.getElementById('dailyStatus').textContent = 'Награда ждёт!';
-    }
-    document.getElementById('btnBasic').classList.toggle('active', activeMode === 'basic');
-    document.getElementById('btnPlus').classList.toggle('active', activeMode === 'plus');
-    document.getElementById('basicContent').style.display = activeMode === 'basic' ? 'block' : 'none';
-    document.getElementById('plusContent').style.display = activeMode === 'plus' ? 'block' : 'none';
-    document.getElementById('premiumStar').style.display = isPlusActive() ? 'inline-block' : 'none';
-
-    // Табы
-    document.getElementById('tabProfile').classList.toggle('active', currentTab === 'profile');
-    document.getElementById('tabSearch').classList.toggle('active', currentTab === 'search');
-    document.getElementById('boundTagRow').style.display = (currentTab === 'profile' && myTag) ? 'flex' : 'none';
-    document.getElementById('searchBox').style.display = currentTab === 'search' ? 'flex' : 'none';
-    document.getElementById('emptyStateText').textContent = currentTab === 'profile' ? 'Привяжи свой тег в профиле' : 'Введи тег для поиска';
-  }
-
-  function renderDayTrack() {
-    var track = document.getElementById('dayTrack');
-    track.innerHTML = '';
-    for (var i = 1; i <= 7; i++) {
-      var div = document.createElement('div');
-      div.className = 'day-item';
-      if (i < currentDay || (i === currentDay && collectedToday)) div.classList.add('collected');
-      else if (i === currentDay && !collectedToday && currentDay <= 7) div.classList.add('today');
-      div.innerHTML = 'Д' + i + '<br><span class="day-reward">' + dailyRewards[i-1] + '</span>';
-      track.appendChild(div);
-    }
-  }
-
-  // Обработчики
-  document.getElementById('tabProfile').addEventListener('click', function() { switchTab('profile'); });
-  document.getElementById('tabSearch').addEventListener('click', function() { switchTab('search'); });
-  document.getElementById('changeTagBtn').addEventListener('click', openChangeTagModal);
-  document.getElementById('changeTagCancel').addEventListener('click', closeChangeTagModal);
-  document.getElementById('changeTagSave').addEventListener('click', saveNewTag);
-  document.getElementById('changeTagModal').addEventListener('click', function(e) { if (e.target === this) closeChangeTagModal(); });
-  document.getElementById('searchBtn').addEventListener('click', function() {
-    var tag = document.getElementById('playerTag').value.trim();
-    if (tag) searchPlayer(tag);
-  });
-  document.getElementById('playerTag').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      var tag = document.getElementById('playerTag').value.trim();
-      if (tag) searchPlayer(tag);
-    }
-  });
-  document.getElementById('claimButton').addEventListener('click', claimReward);
-  document.getElementById('btnBasic').addEventListener('click', function() { setMode('basic'); });
-  document.getElementById('btnPlus').addEventListener('click', function() { setMode('plus'); });
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-  document.getElementById('coinBadge').addEventListener('click', purchasePlus);
-  document.getElementById('mapModalClose').addEventListener('click', function() { document.getElementById('mapModal').classList.remove('active'); });
-  document.getElementById('mapModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
-
-  // Запуск
-  checkDayReset();
-  saveAll();
-  if (isLightTheme) document.getElementById('mainApp').classList.add('light-theme');
-  refreshUI();
-  startAutoRefresh();
-
-  // Автозагрузка профиля если есть тег
-  if (myTag) {
-    document.getElementById('playerTag').value = myTag;
-    setTimeout(function() { searchPlayer(myTag, true); }, 500);
-  }
-})();
-</script>
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        loadData();
+        setTheme(theme);
+        renderAll();
+    </script>
 </body>
 </html>
